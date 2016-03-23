@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferStrategy;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -23,7 +24,7 @@ public class Application extends Canvas implements Runnable {
 	private final static int UPS = 1_000 / 120;
 
 	private int current_fps, current_ups;
-	
+
 	private boolean fpsInLog = true;
 
 	private JFrame window;
@@ -120,27 +121,25 @@ public class Application extends Canvas implements Runnable {
 	}
 
 	public void render() {
-		System.out.println("Render");
+		// System.out.println("Render");
 		Graphics g = getGraphics();
 		for (Iterator<App_Component> iterator = components.iterator(); iterator.hasNext();) {
 			App_Component app_Component = (App_Component) iterator.next();
 			app_Component.draw(g);
-
 		}
 	}
 
 	public void update() {
-		System.out.println("Update");
-		if(fpsInLog){
-			System.out.println(TITLE + " - UPS:" + getUPS() + " | FPS:" + getFPS());
+		// System.out.println("Update");
+		if (fpsInLog) {
+			// System.out.println(TITLE + " - UPS:" + getUPS() + " | FPS:" +
+			// getFPS());
 		}
 	}
 
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		g.setColor(Color.BLUE);
-		g.fillRect(0, 0, 50, 50);
 	}
 
 	public int getWidth() {
@@ -154,19 +153,19 @@ public class Application extends Canvas implements Runnable {
 	public String getTitle() {
 		return this.TITLE;
 	}
-	
-	public int getFPS(){
+
+	public int getFPS() {
 		return current_fps;
 	}
-	
+
 	public int getUPS() {
 		return current_ups;
 	}
 
-	public void setTitle(String title){
+	public void setTitle(String title) {
 		this.TITLE = title;
 	}
-	
+
 	public void add(App_Component component) {
 		components.add(component);
 	}

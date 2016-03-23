@@ -13,7 +13,11 @@ public class PWAL_Picture implements App_Component {
 	}
 
 	@Override
-	public void draw(Graphics g) {
+	public void drawHUD(Graphics g) {
 		g.drawImage(picture, x, y, null);
+	}
+	
+	@Override
+	public void drawIG(Graphics g) {
 	}
 }

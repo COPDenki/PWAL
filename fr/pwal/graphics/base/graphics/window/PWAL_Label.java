@@ -16,11 +16,14 @@ public class PWAL_Label implements App_Component {
 	}
 
 	@Override
-	public void draw(Graphics g) {
+	public void drawHUD(Graphics g) {
 		g.setColor(color);
 		g.drawString(text, x, y);
 	}
 	
+	@Override
+	public void drawIG(Graphics g) {
+	}
 	public PWAL_Label setText(String text){
 		this.text = text;
 		return this;

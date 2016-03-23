@@ -1,0 +1,26 @@
+Définition des hitbox (AABB):
+PosX
+PosY
+Width
+Height
+
+Colision avec le sol:
+a = altitude du sol
+if (posY + Height >= a)
+	ground_colision = true
+else
+	ground_colision = false
+
+Colision avec un mur:
+i1 = PosX/tile_size
+j1 = PosY/tile_size
+i2 = (PosX + Width -1)/tile_size
+j2 = (PosY + Height -1)/tile_size
+
+Wall(i,j): return true or false pour savoir si le tile à la position i,j est un mur
+
+for(i=i1;i<=i2;i++)
+	for(j=j1;j<=j2;j++)
+		if (Wall(i,j)) = true
+			colision = true
+colision = false

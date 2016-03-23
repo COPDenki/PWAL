@@ -1,0 +1,35 @@
+Algorithme de saut:
+
+jump_count = 0
+displacement = 5
+jump_period = (à voir)
+if (pressSpace = true)
+	jumping = true;
+	falling = false;
+	while colision = false
+		if (jump_count < jump_period)
+			if (!idle) (-> si pas immobile)
+				if (last_direction == right)
+					playerX += displacement/2;
+				else
+					playerX -= displacement/2;
+
+		 	playerY += displacement;
+		 	hitBox.setLocation(playerX, playerY);
+			jump_count++;
+		else
+			jumping = false;
+			falling = true;
+			jump_count = 0;
+	jumping = false;
+	falling = true;
+	jump_count = 0;
+
+if falling = true
+	while (ground_colision = false)
+		playerY -= displacement;
+		hitBox.setLocation(playerX, playerY);
+	falling = false
+
+
+	

@@ -16,12 +16,14 @@ public class Level implements App_Component{
 	private int width, height;
 	private int startPosX, startPosY;
 	private int endPosX, endPosY;
+	private Player[] players;
 	
 	private Block[] blocks;
 
-	public Level(String path, Block[] blocks) {
+	public Level(String path, Block[] blocks, Player[] players) {
 		this.path = path;
 		this.blocks = blocks;
+		this.players = players;
 
 		try { // On essaie de ...
 			BufferedReader brLvl = new BufferedReader(
@@ -104,8 +106,13 @@ public class Level implements App_Component{
 
 		for (int y = 0; y < blocksIds.length; y++) {
 			for (int x = 0; x < blocksIds[y].length; x++) {
-				g.drawImage(getBlockAt(x, y).getSprite().getTexure().getScaledInstance(32, 32, BufferedImage.SCALE_DEFAULT), x*64, y*64, null);
+				g.drawImage(getBlockAt(x, y).getSprite().getTexure().getScaledInstance(32, 32, BufferedImage.SCALE_DEFAULT), x*32, y*32, null);
 			}
+		}
+		
+		for (int i = 0; i < players.length; i++) {
+			Player p = players[i];
+			g.drawImage(p.getSprite().getTexure(), p.getPosX()*32, p.getPosY()*32, null);
 		}
 	}
 }

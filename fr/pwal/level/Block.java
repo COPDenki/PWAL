@@ -11,7 +11,6 @@ public class Block {
 	private Sprite sprite;
 
 	public Block(char id, String spritePath) {
-		Sprite s = new Sprite(16, "/sonic.png");
 		this.sprite = new Sprite(SIZE, spritePath);
 		this.isHard = true;
 		this.id = id;

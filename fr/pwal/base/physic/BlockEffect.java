@@ -1,4 +1,6 @@
-package fr.pwal.level;
+package fr.pwal.base.physic;
+
+import fr.pwal.level.Player;
 
 public interface BlockEffect {
 

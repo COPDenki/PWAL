@@ -4,7 +4,7 @@ import java.awt.Graphics;
 
 public interface App_Component {
 
-	public abstract void drawIG(Graphics g);
+	public abstract void drawIG(Graphics g, float scale);
 
 	public abstract void drawHUD(Graphics g);
 }

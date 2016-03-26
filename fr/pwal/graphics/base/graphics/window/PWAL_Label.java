@@ -22,7 +22,7 @@ public class PWAL_Label implements App_Component {
 	}
 	
 	@Override
-	public void drawIG(Graphics g) {
+	public void drawIG(Graphics g, float scale) {
 	}
 	public PWAL_Label setText(String text){
 		this.text = text;

@@ -25,6 +25,7 @@ public class Application extends Canvas implements Runnable {
 	private String TITLE;
 	private final int WIDTH;
 	private final int HEIGHT;
+	private final float SCALE;
 	private final static int FPS = 1_000 / 60;
 	private final static int UPS = 1_000 / 120;
 
@@ -32,6 +33,7 @@ public class Application extends Canvas implements Runnable {
 
 	private JFrame window;
 	private final Thread window_Thread;
+	private BufferedImage img;
 
 	private Vector<App_Component> components;
 
@@ -39,10 +41,11 @@ public class Application extends Canvas implements Runnable {
 
 	private Level level;
 
-	public Application(String title, int width, int height, Level level) {
+	public Application(String title, int width, int height, float scale, Level level) {
 		this.TITLE = title;
 		this.WIDTH = width;
 		this.HEIGHT = height;
+		this.SCALE = scale;
 		this.level = level;
 		window_Thread = new Thread(this);
 		window_Thread.start();
@@ -99,29 +102,19 @@ public class Application extends Canvas implements Runnable {
 
 		}
 	}
-
-	public void render() {
-		if (getBufferStrategy() == null) {
-			createBufferStrategy(3);
+	
+	public void render(){
+		if (img == null){
+			img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		}
-
-		BufferedImage img = new BufferedImage(16 * 20, 16 * 20 * 9 / 16, BufferedImage.TYPE_INT_RGB);
-		BufferedImage hud = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-		BufferedImage render = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
-
 		Graphics g = img.getGraphics();
-		g.setColor(Color.BLACK);
-		g.setFont(new Font("Arial", Font.CENTER_BASELINE, 15));
-		g.fillRect(16 * 20, 16 * 20 * 9 / 16, img.getWidth(), img.getHeight());
-
 		for (Iterator<App_Component> iterator = components.iterator(); iterator.hasNext();) {
 			App_Component app_Component = (App_Component) iterator.next();
-			app_Component.drawIG(g);
-			app_Component.drawHUD(hud.getGraphics());
+			app_Component.drawIG(g, SCALE);
+			app_Component.drawHUD(g);
 		}
-		render.getGraphics().drawImage(img, 0, 0, getWidth(), getHeight(), null);
-		render.getGraphics().drawImage(hud, 0, 0, null);
-		getGraphics().drawImage(render, 0, 0, null);
+		getGraphics().drawImage(img, 0, 0, null);
+		
 	}
 
 	public void update() {

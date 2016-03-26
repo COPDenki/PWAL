@@ -6,6 +6,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import fr.pwal.graphics.base.graphics.window.BlockOverlay;
+
 public class Sprite {
 
 	private final int SIZE;

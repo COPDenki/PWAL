@@ -18,6 +18,6 @@ public class PWAL_Picture implements App_Component {
 	}
 	
 	@Override
-	public void drawIG(Graphics g) {
+	public void drawIG(Graphics g, float scale) {
 	}
 }

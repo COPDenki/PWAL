@@ -86,15 +86,15 @@ public class Level implements App_Component {
 	}
 
 	@Override
-	public void drawIG(Graphics g) {
+	public void drawIG(Graphics g, float scale) {
 		for (int y = 0; y < blocksIds.length; y++) {
 			for (int x = 0; x < blocksIds[y].length; x++) {
-				g.drawImage(getBlockAt(x, y).getSprite().getTexure(), x * 16, y * 16, null);
+				g.drawImage(getBlockAt(x, y).getSprite().getTexure(), (int) (x * 16 * scale), (int) (y * 16 * scale), (int) (16 * scale), (int) (16 * scale), null);
 			}
 		}
 		for (int i = 0; i < players.length; i++) {
 			Player p = players[i];
-			g.drawImage(p.getSprite().getTexure(), (int) (p.getPosX() * 16), (int) (p.getPosY() * 16), null);
+			g.drawImage(p.getSprite().getTexure(), (int) (p.getPosX() * 16 * scale), (int) (p.getPosY() * 16 * scale), (int) (16 * scale), (int) (16 * scale), null);
 		}
 	}
 
@@ -103,11 +103,11 @@ public class Level implements App_Component {
 		for (int i = 0; i < players.length; i++) {
 			Player p = players[i];
 			g.setColor(Color.BLACK);
-			g.fillRect(8, (i+1) * 20 - 2, 150, 19);
+			g.fillRect(8, (i + 1) * 20 - 2, 150, 19);
 			g.setColor(p.getColor());
 			g.drawString(p.getName(), 120, (i + 2) * 20 - 8);
 			g.setColor(Color.GREEN);
-			g.fillRect(10, (i+1) * 20, 100, 15);
+			g.fillRect(10, (i + 1) * 20, 100, 15);
 		}
 	}
 

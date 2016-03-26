@@ -13,9 +13,11 @@ import java.util.Vector;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import fr.pwal.base.physic.BlockEffect;
 import fr.pwal.graphics.base.control.Keyboard;
 import fr.pwal.graphics.base.graphics.window.App_Component;
 import fr.pwal.level.Level;
+import fr.pwal.level.Player;
 
 @SuppressWarnings("serial")
 public class Application extends Canvas implements Runnable {
@@ -34,7 +36,7 @@ public class Application extends Canvas implements Runnable {
 	private Vector<App_Component> components;
 
 	private boolean isRunning;
-	
+
 	private Level level;
 
 	public Application(String title, int width, int height, Level level) {
@@ -59,7 +61,7 @@ public class Application extends Canvas implements Runnable {
 		window.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				int answer = JOptionPane.showConfirmDialog(window, 	"Are you sure ?", "Window closed detection !",
+				int answer = JOptionPane.showConfirmDialog(window, "Are you sure ?", "Window closed detection !",
 						JOptionPane.YES_NO_OPTION);
 				if (answer == JOptionPane.YES_OPTION)
 					System.exit(0);
@@ -69,7 +71,7 @@ public class Application extends Canvas implements Runnable {
 		});
 
 		add(level);
-		
+
 		window.setVisible(true);
 		long timer = System.currentTimeMillis();
 		long start_time_FPS = System.currentTimeMillis();
@@ -82,13 +84,13 @@ public class Application extends Canvas implements Runnable {
 				update();
 				tempUPS++;
 			}
-			
+
 			if (current_time >= start_time_FPS + FPS) {
 				render();
 				tempFPS++;
 			}
 			if (System.currentTimeMillis() > timer + 1000) {
-				timer+= 1000;
+				timer += 1000;
 				current_fps = tempFPS;
 				current_ups = tempUPS;
 				tempUPS = 0;
@@ -98,20 +100,20 @@ public class Application extends Canvas implements Runnable {
 		}
 	}
 
-	public void render() {		
-		if(getBufferStrategy() == null){
+	public void render() {
+		if (getBufferStrategy() == null) {
 			createBufferStrategy(3);
-			}
-		
-		BufferedImage img = new BufferedImage(16*20, 16*20*9/16, BufferedImage.TYPE_INT_RGB);
+		}
+
+		BufferedImage img = new BufferedImage(16 * 20, 16 * 20 * 9 / 16, BufferedImage.TYPE_INT_RGB);
 		BufferedImage hud = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
 		BufferedImage render = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
-		
+
 		Graphics g = img.getGraphics();
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Arial", Font.CENTER_BASELINE, 15));
-		g.fillRect(16*20, 16*20*9/16, img.getWidth(), img.getHeight());
-		
+		g.fillRect(16 * 20, 16 * 20 * 9 / 16, img.getWidth(), img.getHeight());
+
 		for (Iterator<App_Component> iterator = components.iterator(); iterator.hasNext();) {
 			App_Component app_Component = (App_Component) iterator.next();
 			app_Component.drawIG(g);
@@ -124,7 +126,20 @@ public class Application extends Canvas implements Runnable {
 
 	public void update() {
 		for (int i = 0; i < this.level.getPlayers().length; i++) {
-			this.level.getPlayers()[i].move();
+			Player p = this.level.getPlayers()[i];
+			p.move();
+			int x = (int) p.getPosX();
+			int y = (int) p.getPosY();
+			for (int j = -5; j < y + 5; j++) {
+				for (int k = -5; k < x + 5; k++) {
+					try {
+						if (this.level.getBlockAt(k, j) instanceof BlockEffect)
+							((BlockEffect) this.level.getBlockAt(k, j)).doSpecialEffect(p);
+					} catch (Exception e) {
+
+					}
+				}
+			}
 		}
 	}
 

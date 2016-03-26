@@ -1,10 +1,8 @@
 package fr.pwal.level;
 
 import java.awt.Color;
-import java.awt.Graphics;
 
 import fr.pwal.graphics.base.graphics.level.Sprite;
-import fr.pwal.graphics.base.graphics.window.App_Component;
 
 public class Player {
 
@@ -15,6 +13,7 @@ public class Player {
 	public static final int KEY_JUMP = 4;
 
 	private String name;
+	private int life;
 	private int[] keysCodes;
 	private boolean[] keyStates;
 	private Sprite sprite;
@@ -63,11 +62,22 @@ public class Player {
 	}
 
 	public void move() {
-		if(this.keyStates[KEY_LEFT]) this.posX-=0.01;
-		if(this.keyStates[KEY_RIGHT]) this.posX+=0.01;
+		if (this.keyStates[KEY_LEFT])
+			this.posX -= 0.01;
+		if (this.keyStates[KEY_RIGHT])
+			this.posX += 0.01;
 	}
 
 	public Color getColor() {
 		return this.color;
+	}
+
+	public void decreaseLife(int damage) {
+		this.life -= damage;
+	}
+
+
+	public void increaseLife(int heal) {
+		this.life += heal;
 	}
 }

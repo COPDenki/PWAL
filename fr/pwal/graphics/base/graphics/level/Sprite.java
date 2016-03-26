@@ -24,4 +24,8 @@ public class Sprite {
 	public Image getTexure(){
 		return texture;
 	}
+	
+	public void addBlockOverlay(BlockOverlay blockOverlay){
+		//blockOverlay.setupOverlay(this.texture);
+	}
 }

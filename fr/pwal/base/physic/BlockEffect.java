@@ -4,5 +4,5 @@ import fr.pwal.level.Player;
 
 public interface BlockEffect {
 
-	public abstract void specialEffect(Player p);
+	public abstract void doSpecialEffect(Player p);
 }

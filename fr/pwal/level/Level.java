@@ -78,7 +78,7 @@ public class Level implements App_Component {
 		}
 	}
 
-	private Block getBlockAt(int x, int y) {
+	public Block getBlockAt(int x, int y) {
 		for (int i = 0; i < blocks.length; i++)
 			if (blocks[i].getId() == blocksIds[y][x])
 				return blocks[i];

@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import fr.pwal.graphics.base.graphics.level.Sprite;
 
-public class Player {
+public class Player implements EventEntity{
 
 	public static final int KEY_UP = 0;
 	public static final int KEY_LEFT = 1;
@@ -14,6 +14,7 @@ public class Player {
 
 	private String name;
 	private int life;
+	private int maxLife;
 	private int[] keysCodes;
 	private boolean[] keyStates;
 	private Sprite sprite;
@@ -73,11 +74,26 @@ public class Player {
 	}
 
 	public void decreaseLife(int damage) {
-		this.life -= damage;
+		this.setLife(this.getLife() - damage);
+		if(this.getLife() <= 0) onDeath();
 	}
 
-
 	public void increaseLife(int heal) {
-		this.life += heal;
+		if (this.maxLife > heal + this.getLife())
+			this.setLife(maxLife);
+		else
+			this.setLife(this.getLife() + heal);
+	}
+
+	public int getLife() {
+		return life;
+	}
+
+	public void setLife(int life) {
+		this.life = life;
+	}
+
+	@Override
+	public void onDeath() {
 	}
 }

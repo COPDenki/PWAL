@@ -1,16 +1,13 @@
 package fr.pwal.base.physic;
 
+import fr.pwal.level.Block;
+
 public class AABB {
 
 	public static final int UP = 0;
 	public static final int DOWN = 2;
 	public static final int LEFT = 3;
 	public static final int RIGHT = 1;
-
-	public static final int UP_RIGHT = 4;
-	public static final int UP_LEFT = 7;
-	public static final int DOWN_RIGHT = 5;
-	public static final int DOWN_LEFT = 6;
 
 	private float posX, posY;
 	private int width, height;
@@ -61,5 +58,10 @@ public class AABB {
 
 	public void setSuperCollisionTablOfTheDeadXDPtdr(int id, boolean superCollisionTablOfTheDeadXDPtdr) {
 		this.superCollisionTablOfTheDeadXDPtdr[id] = superCollisionTablOfTheDeadXDPtdr;
+	}
+
+	@Override
+	public String toString() {
+		return "Hitbox : x=" + getPosX() + " | y=" + getPosY() + " | x1=" + (getPosX() + getWidth()) + " | y1=" + (getPosY() + getHeight());
 	}
 }

@@ -11,13 +11,7 @@ public class Player implements EventEntity {
 	public static final int KEY_LEFT = 1;
 	public static final int KEY_DOWN = 2;
 	public static final int KEY_RIGHT = 3;
-
-	public static final int KEY_UP_LEFT = 7;
-	public static final int KEY_DOWN_LEFT = 6;
-	public static final int KEY_DOWN_RIGHT = 5;
-	public static final int KEY_UP_RIGHT = 4;
-	
-	public static final int KEY_JUMP = 8;
+	public static final int KEY_JUMP = 4;
 
 	private String name;
 	private int life;
@@ -32,7 +26,7 @@ public class Player implements EventEntity {
 	public Player(String name, String spritePath, int[] keysCodes, Color color) {
 		this.name = name;
 		this.keysCodes = keysCodes;
-		this.keyStates = new boolean[keysCodes.length*keysCodes.length];
+		this.keyStates = new boolean[keysCodes.length];
 		this.sprite = new Sprite(16, spritePath);
 		this.color = color;
 	}
@@ -74,21 +68,13 @@ public class Player implements EventEntity {
 	}
 
 	public void move() {
-		if (this.keyStates[KEY_LEFT] && !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.LEFT]
-				&& !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.DOWN_LEFT]
-				&& !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.UP_LEFT])
+		if (this.keyStates[KEY_LEFT] && !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.LEFT])
 			this.hitbox.setPosX(this.hitbox.getPosX() - 0.005f);
-		if (this.keyStates[KEY_RIGHT] && !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.RIGHT]
-				&& !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.DOWN_RIGHT]
-				&& !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.UP_RIGHT])
+		if (this.keyStates[KEY_RIGHT] && !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.RIGHT])
 			this.hitbox.setPosX(this.hitbox.getPosX() + 0.005f);
-		if (this.keyStates[KEY_DOWN] && !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.DOWN]
-				&& !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.DOWN_LEFT]
-				&& !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.DOWN_RIGHT])
+		if (this.keyStates[KEY_DOWN] && !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.DOWN])
 			this.hitbox.setPosY(this.hitbox.getPosY() + 0.005f);
-		if (this.keyStates[KEY_UP] && !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.UP]
-				&& !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.UP_RIGHT]
-				&& !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.UP_LEFT])
+		if (this.keyStates[KEY_UP] && !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.UP])
 			this.hitbox.setPosY(this.hitbox.getPosY() - 0.005f);
 	}
 

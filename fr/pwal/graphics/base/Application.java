@@ -119,88 +119,39 @@ public class Application extends Canvas implements Runnable {
 	public void update() {
 		for (int i = 0; i < this.level.getPlayers().length; i++) {
 			Player p = this.level.getPlayers()[i];
-			p.move();
-			int x = (int) p.getPosX();
-			int y = (int) p.getPosY();
+			int x = (int) (p.getPosX());
+			int y = (int) (p.getPosY());
+			int xW = (int) (p.getPosX() + p.getHitbox().getWidth());
+			int yH = (int) (p.getPosY() + p.getHitbox().getHeight());
+
+			try {
+				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.DOWN, (this.level.getBlockAt(x, y + 1).getIsHard() || ((p.getPosX() + p.getHitbox().getWidth() - xW) >= 0.01f &&this.level.getBlockAt(xW, y + 1).getIsHard())));
+			} catch (ArrayIndexOutOfBoundsException e) {}
+
+			try {
+				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.UP, (this.level.getBlockAt(x, y).getIsHard() || ((p.getPosX() + p.getHitbox().getWidth() - xW) >= 0.01f &&this.level.getBlockAt(xW, y).getIsHard())));
+			} catch (ArrayIndexOutOfBoundsException e) {}
+
+			try {
+				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.LEFT, (this.level.getBlockAt(x, y).getIsHard() || ((p.getPosY() + p.getHitbox().getHeight() - yH) >= 0.01f && this.level.getBlockAt(x, yH).getIsHard())));
+			} catch (ArrayIndexOutOfBoundsException e) {}
+
+			try {
+				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.RIGHT, (this.level.getBlockAt(x + 1, y).getIsHard() ||((p.getPosY() + p.getHitbox().getHeight() - yH) >= 0.01f && this.level.getBlockAt(x + 1, yH).getIsHard())));
+			} catch (ArrayIndexOutOfBoundsException e) {}
+
 			for (int j = -5; j <= 5; j++) {
 				for (int k = -5; k <= 5; k++) {
 					int x2 = x + k, y2 = y + j;
 					try {
-						if (k == 0 && j == 0) {
-							p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(0,
-									this.level.getBlockAt(x2, y2).getIsHard());
-						}
-					} catch (Exception e) {
-
-					}
-					try {
-						if (k == 1 && j == 0) {
-							p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(1,
-									this.level.getBlockAt(x2, y2).getIsHard());
-
-						}
-					} catch (Exception e) {
-
-					}
-					try {
-						if (k == 0 && j == 1) {
-							p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(2,
-									this.level.getBlockAt(x2, y2).getIsHard());
-						}
-					} catch (Exception e) {
-
-					}
-					try {
-						if (k == -1 && j == 0) {
-							p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(3,
-									this.level.getBlockAt(x2, y2).getIsHard());
-						}
-					} catch (Exception e) {
-
-					}
-					
-					try {
-						if (k == 1 && j == 1) {
-							p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.UP_RIGHT,
-									this.level.getBlockAt(x2, y2).getIsHard());
-						}
-					} catch (Exception e) {
-
-					}try {
-						if (k == 1 && j == -1) {
-							p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.DOWN_RIGHT,
-									this.level.getBlockAt(x2, y2).getIsHard());
-						}
-					} catch (Exception e) {
-
-					}try {
-						if (k == -1 && j == -1) {
-							p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.DOWN_LEFT,
-									this.level.getBlockAt(x2, y2).getIsHard());
-						}
-					} catch (Exception e) {
-
-					}try {
-						if (k == -1 && j == 1) {
-							p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.UP_LEFT,
-									this.level.getBlockAt(x2, y2).getIsHard());
-						}
-					} catch (Exception e) {
-
-					}
-					
-					
-
-					try {
 						if (this.level.getBlockAt(x2, y2) instanceof BlockEffect)
 							((BlockEffect) this.level.getBlockAt(x2, y2)).doSpecialEffect(p);
-					} catch (Exception e) {
-
-					}
+					} catch (Exception e) {}
 				}
 			}
 			p.move();
 		}
+
 	}
 
 	@Override

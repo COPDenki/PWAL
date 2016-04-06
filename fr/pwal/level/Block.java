@@ -6,7 +6,6 @@ public class Block {
 	
 	private final int SIZE = 16;
 	private final boolean isHard;
-	private int posX, posY;
 	private final char id;
 	private Sprite sprite;
 
@@ -21,16 +20,6 @@ public class Block {
 		this.isHard = isHard;
 		this.id = id;
 	}
-	
-	
-	public int getPosX(){
-		return this.posX;
-	}
-	
-	public int getPosY(){
-		return this.posY;
-	}
-	
 	public boolean getIsHard(){
 		return this.isHard;
 	}

@@ -96,7 +96,7 @@ public class Level implements App_Component {
 		}
 		for (int i = 0; i < players.length; i++) {
 			Player p = players[i];
-			g.drawImage(p.getSprite().getTexure(), (int) (p.getPosX() * 16 * scale), (int) (p.getPosY() * 16 * scale), (int) (16 * scale), (int) (16 * scale), null);
+			g.drawImage(p.getSprite(), (int) (p.getPosX() * 16 * scale), (int) (p.getPosY() * 16 * scale), (int) (p.getHitbox().getWidth()*16 * scale), (int) (p.getHitbox().getHeight()*16 * scale), null);
 		}
 	}
 

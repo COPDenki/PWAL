@@ -22,7 +22,6 @@ public class Sprite {
 			this.texture = new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB);
 		}
 	}
-	
 	public Image getTexure(){
 		return texture;
 	}

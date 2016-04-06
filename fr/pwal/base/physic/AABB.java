@@ -1,7 +1,5 @@
 package fr.pwal.base.physic;
 
-import fr.pwal.level.Block;
-
 public class AABB {
 
 	public static final int UP = 0;
@@ -9,11 +7,10 @@ public class AABB {
 	public static final int LEFT = 3;
 	public static final int RIGHT = 1;
 
-	private float posX, posY;
-	private int width, height;
+	private float posX, posY, width, height;
 	private boolean[] superCollisionTablOfTheDeadXDPtdr = { false, false, false, false, false, false, false, false };
 
-	public AABB(float x, float y, int w, int h) {
+	public AABB(float x, float y, float w, float h) {
 		this.posX = x;
 		this.posY = y;
 		this.width = w;
@@ -36,7 +33,11 @@ public class AABB {
 		this.width = width;
 	}
 
-	public int getHeight() {
+	public float getWidth() {
+		return width;
+	}
+
+	public float getHeight() {
 		return height;
 	}
 
@@ -46,10 +47,6 @@ public class AABB {
 
 	public float getPosY() {
 		return posY;
-	}
-
-	public int getWidth() {
-		return width;
 	}
 
 	public boolean[] getSuperCollisionTablOfTheDeadXDPtdr() {

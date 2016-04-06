@@ -56,6 +56,10 @@ public class Player implements EventEntity {
 	public int[] getKeysCodes() {
 		return keysCodes;
 	}
+	
+	public boolean getKeyState(int code){
+		return keyStates[code];
+	}
 
 	public void setKeyState(int code, boolean val) {
 		this.keyStates[code] = val;

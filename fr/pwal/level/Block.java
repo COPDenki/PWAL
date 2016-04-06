@@ -16,6 +16,12 @@ public class Block {
 		this.id = id;
 	}
 	
+	public Block(char id, String spritePath, boolean isHard) {
+		this.sprite = new Sprite(SIZE, spritePath);
+		this.isHard = isHard;
+		this.id = id;
+	}
+	
 	
 	public int getPosX(){
 		return this.posX;

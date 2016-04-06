@@ -2,15 +2,22 @@ package fr.pwal.level;
 
 import java.awt.Color;
 
+import fr.pwal.base.physic.AABB;
 import fr.pwal.graphics.base.graphics.level.Sprite;
 
-public class Player implements EventEntity{
+public class Player implements EventEntity {
 
 	public static final int KEY_UP = 0;
 	public static final int KEY_LEFT = 1;
 	public static final int KEY_DOWN = 2;
 	public static final int KEY_RIGHT = 3;
-	public static final int KEY_JUMP = 4;
+
+	public static final int KEY_UP_LEFT = 7;
+	public static final int KEY_DOWN_LEFT = 6;
+	public static final int KEY_DOWN_RIGHT = 5;
+	public static final int KEY_UP_RIGHT = 4;
+	
+	public static final int KEY_JUMP = 8;
 
 	private String name;
 	private int life;
@@ -20,12 +27,12 @@ public class Player implements EventEntity{
 	private Sprite sprite;
 	private Color color;
 
-	private float posX = 0, posY = 0;
+	private AABB hitbox = new AABB(0, 0, 1, 1);
 
 	public Player(String name, String spritePath, int[] keysCodes, Color color) {
 		this.name = name;
 		this.keysCodes = keysCodes;
-		this.keyStates = new boolean[keysCodes.length];
+		this.keyStates = new boolean[keysCodes.length*keysCodes.length];
 		this.sprite = new Sprite(16, spritePath);
 		this.color = color;
 	}
@@ -39,11 +46,11 @@ public class Player implements EventEntity{
 	}
 
 	public float getPosX() {
-		return this.posX;
+		return this.hitbox.getPosX();
 	}
 
 	public float getPosY() {
-		return this.posY;
+		return this.hitbox.getPosY();
 	}
 
 	public int[] getKeysCodes() {
@@ -55,18 +62,34 @@ public class Player implements EventEntity{
 	}
 
 	public void setPosX(int posX) {
-		this.posX = posX;
+		this.hitbox.setPosX(posX);
 	}
 
 	public void setPosY(int posY) {
-		this.posY = posY;
+		this.hitbox.setPosY(posY);
 	}
 
 	public void move() {
-		if (this.keyStates[KEY_LEFT])
-			this.posX -= 0.01;
-		if (this.keyStates[KEY_RIGHT])
-			this.posX += 0.01;
+		if (this.keyStates[KEY_LEFT] && !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.LEFT]
+				&& !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.DOWN_LEFT]
+				&& !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.UP_LEFT])
+			this.hitbox.setPosX(this.hitbox.getPosX() - 0.005f);
+		if (this.keyStates[KEY_RIGHT] && !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.RIGHT]
+				&& !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.DOWN_RIGHT]
+				&& !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.UP_RIGHT])
+			this.hitbox.setPosX(this.hitbox.getPosX() + 0.005f);
+		if (this.keyStates[KEY_DOWN] && !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.DOWN]
+				&& !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.DOWN_LEFT]
+				&& !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.DOWN_RIGHT])
+			this.hitbox.setPosY(this.hitbox.getPosY() + 0.005f);
+		if (this.keyStates[KEY_UP] && !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.UP]
+				&& !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.UP_RIGHT]
+				&& !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.UP_LEFT])
+			this.hitbox.setPosY(this.hitbox.getPosY() - 0.005f);
+	}
+
+	public AABB getHitbox() {
+		return this.hitbox;
 	}
 
 	public Color getColor() {
@@ -75,7 +98,8 @@ public class Player implements EventEntity{
 
 	public void decreaseLife(int damage) {
 		this.setLife(this.getLife() - damage);
-		if(this.getLife() <= 0) onDeath();
+		if (this.getLife() <= 0)
+			onDeath();
 	}
 
 	public void increaseLife(int heal) {

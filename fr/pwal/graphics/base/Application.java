@@ -11,6 +11,7 @@ import java.util.Vector;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import fr.pwal.base.physic.AABB;
 import fr.pwal.base.physic.BlockEffect;
 import fr.pwal.graphics.base.control.Keyboard;
 import fr.pwal.graphics.base.graphics.window.App_Component;
@@ -100,9 +101,9 @@ public class Application extends Canvas implements Runnable {
 
 		}
 	}
-	
-	public void render(){
-		if (img == null){
+
+	public void render() {
+		if (img == null) {
 			img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		}
 		Graphics g = img.getGraphics();
@@ -112,7 +113,7 @@ public class Application extends Canvas implements Runnable {
 			app_Component.drawHUD(g);
 		}
 		getGraphics().drawImage(img, 0, 0, null);
-		
+
 	}
 
 	public void update() {
@@ -121,16 +122,84 @@ public class Application extends Canvas implements Runnable {
 			p.move();
 			int x = (int) p.getPosX();
 			int y = (int) p.getPosY();
-			for (int j = -5; j < y + 5; j++) {
-				for (int k = -5; k < x + 5; k++) {
+			for (int j = -5; j <= 5; j++) {
+				for (int k = -5; k <= 5; k++) {
+					int x2 = x + k, y2 = y + j;
 					try {
-						if (this.level.getBlockAt(k, j) instanceof BlockEffect)
-							((BlockEffect) this.level.getBlockAt(k, j)).doSpecialEffect(p);
+						if (k == 0 && j == 0) {
+							p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(0,
+									this.level.getBlockAt(x2, y2).getIsHard());
+						}
+					} catch (Exception e) {
+
+					}
+					try {
+						if (k == 1 && j == 0) {
+							p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(1,
+									this.level.getBlockAt(x2, y2).getIsHard());
+
+						}
+					} catch (Exception e) {
+
+					}
+					try {
+						if (k == 0 && j == 1) {
+							p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(2,
+									this.level.getBlockAt(x2, y2).getIsHard());
+						}
+					} catch (Exception e) {
+
+					}
+					try {
+						if (k == -1 && j == 0) {
+							p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(3,
+									this.level.getBlockAt(x2, y2).getIsHard());
+						}
+					} catch (Exception e) {
+
+					}
+					
+					try {
+						if (k == 1 && j == 1) {
+							p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.UP_RIGHT,
+									this.level.getBlockAt(x2, y2).getIsHard());
+						}
+					} catch (Exception e) {
+
+					}try {
+						if (k == 1 && j == -1) {
+							p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.DOWN_RIGHT,
+									this.level.getBlockAt(x2, y2).getIsHard());
+						}
+					} catch (Exception e) {
+
+					}try {
+						if (k == -1 && j == -1) {
+							p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.DOWN_LEFT,
+									this.level.getBlockAt(x2, y2).getIsHard());
+						}
+					} catch (Exception e) {
+
+					}try {
+						if (k == -1 && j == 1) {
+							p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.UP_LEFT,
+									this.level.getBlockAt(x2, y2).getIsHard());
+						}
+					} catch (Exception e) {
+
+					}
+					
+					
+
+					try {
+						if (this.level.getBlockAt(x2, y2) instanceof BlockEffect)
+							((BlockEffect) this.level.getBlockAt(x2, y2)).doSpecialEffect(p);
 					} catch (Exception e) {
 
 					}
 				}
 			}
+			p.move();
 		}
 	}
 

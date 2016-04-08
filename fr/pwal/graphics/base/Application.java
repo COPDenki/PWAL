@@ -126,9 +126,10 @@ public class Application extends Canvas implements Runnable {
 								* 0.000023f));
 			} else if (p.isJumpFalling() && p.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.DOWN]) {
 				p.setJumpingFalling(false);
-				p.setJumpSlow(0);
-			} else
+				p.setJumpSlow(1);
+			} else {
 				this.level.getGravity().appliedOn(p);
+			}
 			int x = (int) (p.getPosX());
 			int y = (int) (p.getPosY());
 			int xW = (int) (p.getPosX() + p.getHitbox().getWidth());
@@ -139,32 +140,28 @@ public class Application extends Canvas implements Runnable {
 						(this.level.getBlockAt(x, y + 1).getIsHard()
 								|| ((p.getPosX() + p.getHitbox().getWidth() - xW) >= 0.01f
 										&& this.level.getBlockAt(xW, y + 1).getIsHard())));
-			} catch (ArrayIndexOutOfBoundsException e) {
-			}
+			} catch (ArrayIndexOutOfBoundsException e) {}
 
 			try {
 				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.UP,
 						(this.level.getBlockAt(x, y).getIsHard()
 								|| ((p.getPosX() + p.getHitbox().getWidth() - xW) >= 0.01f
 										&& this.level.getBlockAt(xW, y).getIsHard())));
-			} catch (ArrayIndexOutOfBoundsException e) {
-			}
+			} catch (ArrayIndexOutOfBoundsException e) {}
 
 			try {
 				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.LEFT,
 						(this.level.getBlockAt(x, y).getIsHard()
 								|| ((p.getPosY() + p.getHitbox().getHeight() - yH) >= 0.01f
 										&& this.level.getBlockAt(x, yH).getIsHard())));
-			} catch (ArrayIndexOutOfBoundsException e) {
-			}
+			} catch (ArrayIndexOutOfBoundsException e) {}
 
 			try {
 				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.RIGHT,
 						(this.level.getBlockAt(x + 1, y).getIsHard()
 								|| ((p.getPosY() + p.getHitbox().getHeight() - yH) >= 0.01f
 										&& this.level.getBlockAt(x + 1, yH).getIsHard())));
-			} catch (ArrayIndexOutOfBoundsException e) {
-			}
+			} catch (ArrayIndexOutOfBoundsException e) {}
 
 			for (int j = -5; j <= 5; j++) {
 				for (int k = -5; k <= 5; k++) {
@@ -172,8 +169,7 @@ public class Application extends Canvas implements Runnable {
 					try {
 						if (this.level.getBlockAt(x2, y2) instanceof BlockEffect)
 							((BlockEffect) this.level.getBlockAt(x2, y2)).doSpecialEffect(p);
-					} catch (Exception e) {
-					}
+					} catch (Exception e) {}
 				}
 			}
 			p.move();

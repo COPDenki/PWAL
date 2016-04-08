@@ -24,7 +24,7 @@ public class Player implements EventEntity {
 
 	private int moveDirection = 0;
 	private float moveTimer = 0;
-	private float speed = 0.02f;
+	private float speed = 0.007f;
 	private float slow = 1;
 	private int jump_time = 3*120;
 	private int jump_time_counter;
@@ -172,7 +172,7 @@ public class Player implements EventEntity {
 		if (!isJumping()){
 			this.jump_time_counter = 0;
 			setJumping(true);	
-			setJumpSlow(0.5f);
+			setJumpSlow(1.2f);
 		}
 		
 		if(this.jump_time_counter >= this.jump_time){

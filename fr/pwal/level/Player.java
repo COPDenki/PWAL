@@ -24,8 +24,15 @@ public class Player implements EventEntity {
 
 	private int moveDirection = 0;
 	private float moveTimer = 0;
+	private float speed = 0.02f;
+	private float slow = 1;
+	private int jump_time = 3*120;
+	private int jump_time_counter;
+
+	private boolean isJumping;
 
 	private AABB hitbox;
+	private boolean isJumpFalling;
 
 	public Player(String name, String spritePath, int[] keysCodes, Color color) {
 		this.name = name;
@@ -43,28 +50,28 @@ public class Player implements EventEntity {
 	public Image getSprite() {
 		int moveTimer2 = (int) moveTimer;
 		switch (moveDirection) {
-			case 1:
-				if (moveTimer2 == 1)
-					return this.sprite.getSprite(4);
-				else if (moveTimer2 == 3)
-					return this.sprite.getSprite(5);
-				else
-					return this.sprite.getSprite(3);
-			case 3:
-				if (moveTimer2 == 1)
-					return this.sprite.getSprite(10);
-				else if (moveTimer2 == 3)
-					return this.sprite.getSprite(11);
-				else
-					return this.sprite.getSprite(9);
+		case 1:
+			if (moveTimer2 == 1)
+				return this.sprite.getSprite(4);
+			else if (moveTimer2 == 3)
+				return this.sprite.getSprite(5);
+			else
+				return this.sprite.getSprite(3);
+		case 3:
+			if (moveTimer2 == 1)
+				return this.sprite.getSprite(10);
+			else if (moveTimer2 == 3)
+				return this.sprite.getSprite(11);
+			else
+				return this.sprite.getSprite(9);
 
-			default:
-				if (moveTimer2 == 1)
-					return this.sprite.getSprite(0);
-				else if (moveTimer2 == 3)
-					return this.sprite.getSprite(2);
-				else
-					return this.sprite.getSprite(1);
+		default:
+			if (moveTimer2 == 1)
+				return this.sprite.getSprite(0);
+			else if (moveTimer2 == 3)
+				return this.sprite.getSprite(2);
+			else
+				return this.sprite.getSprite(1);
 		}
 	}
 
@@ -98,26 +105,30 @@ public class Player implements EventEntity {
 
 	public void move() {
 		if (this.keyStates[KEY_DOWN] && !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.DOWN]) {
-			moveTimer += 0.01f;
+			moveTimer += 2 * speed * slow;
 			moveDirection = 0;
-			this.hitbox.setPosY(this.hitbox.getPosY() + 0.005f);
+			this.hitbox.setPosY(this.hitbox.getPosY() + speed * slow);
 		}
 		if (this.keyStates[KEY_UP] && !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.UP]) {
-			moveTimer += 0.01f;
+			moveTimer += 2 * speed * slow;
 			moveDirection = 0;
-			this.hitbox.setPosY(this.hitbox.getPosY() - 0.005f);
+			this.hitbox.setPosY(this.hitbox.getPosY() - speed * slow);
 		}
 		if (this.keyStates[KEY_LEFT] && !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.LEFT]) {
-			moveTimer += 0.01f;
+			moveTimer += 2 * speed * slow;
 			moveDirection = 3;
-			this.hitbox.setPosX(this.hitbox.getPosX() - 0.005f);
+			this.hitbox.setPosX(this.hitbox.getPosX() - speed * slow);
 		}
 		if (this.keyStates[KEY_RIGHT] && !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.RIGHT]) {
-			moveTimer += 0.01f;
+			moveTimer += 2 * speed * slow;
 			moveDirection = 1;
-			this.hitbox.setPosX(this.hitbox.getPosX() + 0.005f);
+			this.hitbox.setPosX(this.hitbox.getPosX() + speed * slow);
 		}
-		if (moveTimer > 4) moveTimer = 0;
+		if (this.keyStates[KEY_JUMP] && !(isJumpFalling || isJumping)) {
+			jump();
+		}
+		if (moveTimer > 4)
+			moveTimer = 0;
 	}
 
 	public AABB getHitbox() {
@@ -150,5 +161,49 @@ public class Player implements EventEntity {
 	}
 
 	@Override
-	public void onDeath() {}
+	public void onDeath() {
+	}
+
+	public boolean isJumping() {
+		return isJumping;
+	}
+
+	public void jump() {
+		if (!isJumping()){
+			this.jump_time_counter = 0;
+			setJumping(true);	
+			setJumpSlow(0.5f);
+		}
+		
+		if(this.jump_time_counter >= this.jump_time){
+			setJumping(false);
+			setJumpingFalling(true);
+		}
+			
+		this.jump_time_counter++;
+	}
+
+	public void setJumping(boolean isJumping) {
+		this.isJumping = isJumping;
+	}
+
+	public float getJumpTimer() {
+		return jump_time_counter;
+	}
+
+	public int getJumpTime() {
+		return jump_time;
+	}
+
+	public boolean isJumpFalling() {
+		return isJumpFalling;
+	}
+
+	public void setJumpingFalling(boolean b) {
+		this.isJumpFalling = b;
+	}
+
+	public void setJumpSlow(float slow) {
+		this.slow = slow;
+	}
 }

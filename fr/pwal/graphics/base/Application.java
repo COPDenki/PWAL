@@ -73,7 +73,6 @@ public class Application extends Canvas implements Runnable {
 		});
 
 		add(level);
-
 		window.setVisible(true);
 		long timer = System.currentTimeMillis();
 		long start_time_FPS = System.currentTimeMillis();
@@ -119,26 +118,53 @@ public class Application extends Canvas implements Runnable {
 	public void update() {
 		for (int i = 0; i < this.level.getPlayers().length; i++) {
 			Player p = this.level.getPlayers()[i];
+			if (p.isJumping()) {
+				p.jump();
+				p.getHitbox()
+						.setPosY(p.getHitbox().getPosY() - (this.level.getGravity().getIntensity()
+								* ((p.getJumpTime() - p.getJumpTimer()) * (p.getJumpTime() - p.getJumpTimer()))
+								* 0.000023f));
+			} else if (p.isJumpFalling() && p.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.DOWN]) {
+				p.setJumpingFalling(false);
+				p.setJumpSlow(0);
+			} else
+				this.level.getGravity().appliedOn(p);
 			int x = (int) (p.getPosX());
 			int y = (int) (p.getPosY());
 			int xW = (int) (p.getPosX() + p.getHitbox().getWidth());
 			int yH = (int) (p.getPosY() + p.getHitbox().getHeight());
 
 			try {
-				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.DOWN, (this.level.getBlockAt(x, y + 1).getIsHard() || ((p.getPosX() + p.getHitbox().getWidth() - xW) >= 0.01f &&this.level.getBlockAt(xW, y + 1).getIsHard())));
-			} catch (ArrayIndexOutOfBoundsException e) {}
+				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.DOWN,
+						(this.level.getBlockAt(x, y + 1).getIsHard()
+								|| ((p.getPosX() + p.getHitbox().getWidth() - xW) >= 0.01f
+										&& this.level.getBlockAt(xW, y + 1).getIsHard())));
+			} catch (ArrayIndexOutOfBoundsException e) {
+			}
 
 			try {
-				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.UP, (this.level.getBlockAt(x, y).getIsHard() || ((p.getPosX() + p.getHitbox().getWidth() - xW) >= 0.01f &&this.level.getBlockAt(xW, y).getIsHard())));
-			} catch (ArrayIndexOutOfBoundsException e) {}
+				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.UP,
+						(this.level.getBlockAt(x, y).getIsHard()
+								|| ((p.getPosX() + p.getHitbox().getWidth() - xW) >= 0.01f
+										&& this.level.getBlockAt(xW, y).getIsHard())));
+			} catch (ArrayIndexOutOfBoundsException e) {
+			}
 
 			try {
-				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.LEFT, (this.level.getBlockAt(x, y).getIsHard() || ((p.getPosY() + p.getHitbox().getHeight() - yH) >= 0.01f && this.level.getBlockAt(x, yH).getIsHard())));
-			} catch (ArrayIndexOutOfBoundsException e) {}
+				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.LEFT,
+						(this.level.getBlockAt(x, y).getIsHard()
+								|| ((p.getPosY() + p.getHitbox().getHeight() - yH) >= 0.01f
+										&& this.level.getBlockAt(x, yH).getIsHard())));
+			} catch (ArrayIndexOutOfBoundsException e) {
+			}
 
 			try {
-				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.RIGHT, (this.level.getBlockAt(x + 1, y).getIsHard() ||((p.getPosY() + p.getHitbox().getHeight() - yH) >= 0.01f && this.level.getBlockAt(x + 1, yH).getIsHard())));
-			} catch (ArrayIndexOutOfBoundsException e) {}
+				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.RIGHT,
+						(this.level.getBlockAt(x + 1, y).getIsHard()
+								|| ((p.getPosY() + p.getHitbox().getHeight() - yH) >= 0.01f
+										&& this.level.getBlockAt(x + 1, yH).getIsHard())));
+			} catch (ArrayIndexOutOfBoundsException e) {
+			}
 
 			for (int j = -5; j <= 5; j++) {
 				for (int k = -5; k <= 5; k++) {
@@ -146,7 +172,8 @@ public class Application extends Canvas implements Runnable {
 					try {
 						if (this.level.getBlockAt(x2, y2) instanceof BlockEffect)
 							((BlockEffect) this.level.getBlockAt(x2, y2)).doSpecialEffect(p);
-					} catch (Exception e) {}
+					} catch (Exception e) {
+					}
 				}
 			}
 			p.move();

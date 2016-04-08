@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import fr.pwal.base.physic.Gravity;
 import fr.pwal.graphics.base.graphics.window.App_Component;
 
 public class Level implements App_Component {
@@ -19,7 +20,10 @@ public class Level implements App_Component {
 
 	private Block[] blocks;
 
-	public Level(String path, Block[] blocks, Player[] players) {
+	private Gravity gravity;
+
+	public Level(Gravity gravity, String path, Block[] blocks, Player[] players) {
+		this.gravity = gravity;
 		this.blocks = blocks;
 		this.players = players;
 		try { // On essaie de ...
@@ -131,5 +135,10 @@ public class Level implements App_Component {
 
 	public Player[] getPlayers() {
 		return this.players;
+	}
+
+	public Gravity getGravity() {
+		return this.gravity;
+		
 	}
 }

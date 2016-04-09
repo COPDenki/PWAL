@@ -6,6 +6,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import fr.pwal.base.physic.AABB;
+import fr.pwal.base.physic.BlockEffect;
 import fr.pwal.base.physic.Gravity;
 import fr.pwal.graphics.base.graphics.window.App_Component;
 
@@ -77,9 +79,77 @@ public class Level implements App_Component {
 				i++;
 			}
 
-		} catch (IOException e) { // Si une erreur est lev�e ...
-			e.printStackTrace(); // ... on �crit le rapport d'erreur dans
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+	}
+
+	public void render(Graphics g, float scale) {
+		this.drawIG(g, scale);
+		this.drawHUD(g);
+	}
+
+	public void update() {
+		for (int i = 0; i < getPlayers().length; i++) {
+			Player p = getPlayers()[i];
+			if (p.isJumping()) {
+				p.jump();
+				p.getHitbox()
+						.setPosY(p.getHitbox().getPosY() - (getGravity().getIntensity()
+								* ((p.getJumpTime() - p.getJumpTimer()) * (p.getJumpTime() - p.getJumpTimer()))
+								* 0.000023f));
+			} else if (p.isJumpFalling() && p.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.DOWN]) {
+				p.setJumpingFalling(false);
+				p.resetJumpCounter();
+				p.setJumpSlow(1);
+			} else {
+				getGravity().appliedOn(p);
+			}
+			int x = (int) (p.getPosX());
+			int y = (int) (p.getPosY());
+			int xW = (int) (p.getPosX() + p.getHitbox().getWidth());
+			int yH = (int) (p.getPosY() + p.getHitbox().getHeight());
+
+			try {
+				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.DOWN,
+						(getBlockAt(x, y + 1).getIsHard()
+								|| ((p.getPosX() + p.getHitbox().getWidth() - xW) >= 0.01f
+										&& getBlockAt(xW, y + 1).getIsHard())));
+			} catch (ArrayIndexOutOfBoundsException e) {}
+
+			try {
+				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.UP,
+						(getBlockAt(x, y).getIsHard()
+								|| ((p.getPosX() + p.getHitbox().getWidth() - xW) >= 0.01f
+										&& getBlockAt(xW, y).getIsHard())));
+			} catch (ArrayIndexOutOfBoundsException e) {}
+
+			try {
+				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.LEFT,
+						(getBlockAt(x, y).getIsHard()
+								|| ((p.getPosY() + p.getHitbox().getHeight() - yH) >= 0.01f
+										&& getBlockAt(x, yH).getIsHard())));
+			} catch (ArrayIndexOutOfBoundsException e) {}
+
+			try {
+				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.RIGHT,
+						(getBlockAt(x + 1, y).getIsHard()
+								|| ((p.getPosY() + p.getHitbox().getHeight() - yH) >= 0.01f
+										&& getBlockAt(x + 1, yH).getIsHard())));
+			} catch (ArrayIndexOutOfBoundsException e) {}
+
+			for (int j = -5; j <= 5; j++) {
+				for (int k = -5; k <= 5; k++) {
+					int x2 = x + k, y2 = y + j;
+					try {
+						if (getBlockAt(x2, y2) instanceof BlockEffect)
+							((BlockEffect) getBlockAt(x2, y2)).doSpecialEffect(p);
+					} catch (Exception e) {}
+				}
+			}
+			p.move();
+		}
+
 	}
 
 	public Block getBlockAt(int x, int y) {
@@ -100,7 +170,7 @@ public class Level implements App_Component {
 		}
 		for (int i = 0; i < players.length; i++) {
 			Player p = players[i];
-			g.drawImage(p.getSprite(), (int) (p.getPosX() * 16 * scale), (int) (p.getPosY() * 16 * scale), (int) (p.getHitbox().getWidth()*16 * scale), (int) (p.getHitbox().getHeight()*16 * scale), null);
+			g.drawImage(p.getSprite(), (int) (p.getPosX() * 16 * scale), (int) (p.getPosY() * 16 * scale), (int) (p.getHitbox().getWidth() * 16 * scale), (int) (p.getHitbox().getHeight() * 16 * scale), null);
 		}
 	}
 
@@ -113,7 +183,7 @@ public class Level implements App_Component {
 			g.setColor(p.getColor());
 			g.drawString(p.getName(), 120, (i + 2) * 20 - 8);
 			g.setColor(Color.GREEN);
-			g.fillRect(10, (i + 1) * 20, 100, 15);
+			g.fillRect(10, (i + 1) * 20, ((p.getLife()) / p.getMaxLife()) * 100, 15);
 		}
 	}
 
@@ -139,6 +209,6 @@ public class Level implements App_Component {
 
 	public Gravity getGravity() {
 		return this.gravity;
-		
+
 	}
 }

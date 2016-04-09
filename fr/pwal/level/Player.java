@@ -37,8 +37,9 @@ public class Player implements EventEntity {
 	private AABB hitbox;
 	private boolean isJumpFalling;
 
-	public Player(String name, String spritePath, int[] keysCodes, Color color) {
+	public Player(String name, int maxLife, String spritePath, int[] keysCodes, Color color) {
 		this.name = name;
+		this.life = this.maxLife = maxLife;
 		this.keysCodes = keysCodes;
 		this.keyStates = new boolean[keysCodes.length];
 		this.sprite = new CharacterSprite(spritePath);
@@ -218,5 +219,9 @@ public class Player implements EventEntity {
 
 	public void resetJumpCounter() {
 		this.jump_counter = 0;
+	}
+
+	public int getMaxLife() {
+		return this.maxLife;
 	}
 }

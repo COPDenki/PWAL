@@ -26,8 +26,11 @@ public class Player implements EventEntity {
 	private float moveTimer = 0;
 	private float speed = 0.007f;
 	private float slow = 1;
-	private int jump_time = 3*120;
+	private static final int jump_time = 3 * 120;
 	private int jump_time_counter;
+	private static final int max_jump = 2;
+	private int jump_counter;
+	private boolean jump_key_reset;
 
 	private boolean isJumping;
 
@@ -50,28 +53,28 @@ public class Player implements EventEntity {
 	public Image getSprite() {
 		int moveTimer2 = (int) moveTimer;
 		switch (moveDirection) {
-		case 1:
-			if (moveTimer2 == 1)
-				return this.sprite.getSprite(4);
-			else if (moveTimer2 == 3)
-				return this.sprite.getSprite(5);
-			else
-				return this.sprite.getSprite(3);
-		case 3:
-			if (moveTimer2 == 1)
-				return this.sprite.getSprite(10);
-			else if (moveTimer2 == 3)
-				return this.sprite.getSprite(11);
-			else
-				return this.sprite.getSprite(9);
+			case 1:
+				if (moveTimer2 == 1)
+					return this.sprite.getSprite(4);
+				else if (moveTimer2 == 3)
+					return this.sprite.getSprite(5);
+				else
+					return this.sprite.getSprite(3);
+			case 3:
+				if (moveTimer2 == 1)
+					return this.sprite.getSprite(10);
+				else if (moveTimer2 == 3)
+					return this.sprite.getSprite(11);
+				else
+					return this.sprite.getSprite(9);
 
-		default:
-			if (moveTimer2 == 1)
-				return this.sprite.getSprite(0);
-			else if (moveTimer2 == 3)
-				return this.sprite.getSprite(2);
-			else
-				return this.sprite.getSprite(1);
+			default:
+				if (moveTimer2 == 1)
+					return this.sprite.getSprite(0);
+				else if (moveTimer2 == 3)
+					return this.sprite.getSprite(2);
+				else
+					return this.sprite.getSprite(1);
 		}
 	}
 
@@ -109,11 +112,6 @@ public class Player implements EventEntity {
 			moveDirection = 0;
 			this.hitbox.setPosY(this.hitbox.getPosY() + speed * slow);
 		}
-		if (this.keyStates[KEY_UP] && !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.UP]) {
-			moveTimer += 2 * speed * slow;
-			moveDirection = 0;
-			this.hitbox.setPosY(this.hitbox.getPosY() - speed * slow);
-		}
 		if (this.keyStates[KEY_LEFT] && !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.LEFT]) {
 			moveTimer += 2 * speed * slow;
 			moveDirection = 3;
@@ -124,9 +122,11 @@ public class Player implements EventEntity {
 			moveDirection = 1;
 			this.hitbox.setPosX(this.hitbox.getPosX() + speed * slow);
 		}
-		if (this.keyStates[KEY_JUMP] && !(isJumpFalling || isJumping)) {
+		if (this.keyStates[KEY_JUMP] && ((!(isJumpFalling() || isJumping())) || canMultiJump())) {
 			jump();
-		}
+			jump_key_reset = false;
+		} if (!this.keyStates[KEY_JUMP])
+			jump_key_reset = true;
 		if (moveTimer > 4)
 			moveTimer = 0;
 	}
@@ -161,25 +161,24 @@ public class Player implements EventEntity {
 	}
 
 	@Override
-	public void onDeath() {
-	}
+	public void onDeath() {}
 
 	public boolean isJumping() {
 		return isJumping;
 	}
 
 	public void jump() {
-		if (!isJumping()){
+		if (!isJumping()) {
 			this.jump_time_counter = 0;
-			setJumping(true);	
+			setJumping(true);
 			setJumpSlow(1.2f);
 		}
-		
-		if(this.jump_time_counter >= this.jump_time){
+
+		if (this.jump_time_counter >= this.jump_time) {
 			setJumping(false);
 			setJumpingFalling(true);
 		}
-			
+
 		this.jump_time_counter++;
 	}
 
@@ -205,5 +204,19 @@ public class Player implements EventEntity {
 
 	public void setJumpSlow(float slow) {
 		this.slow = slow;
+	}
+
+	private boolean canMultiJump() {
+		if (jump_counter <= max_jump && jump_key_reset) {
+			jump_counter++;
+			this.jump_time_counter = 0;
+			setJumping(true);
+			setJumpingFalling(false);
+		}
+		return false;
+	}
+
+	public void resetJumpCounter() {
+		this.jump_counter = 0;
 	}
 }

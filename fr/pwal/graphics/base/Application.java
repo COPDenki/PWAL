@@ -126,6 +126,7 @@ public class Application extends Canvas implements Runnable {
 								* 0.000023f));
 			} else if (p.isJumpFalling() && p.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.DOWN]) {
 				p.setJumpingFalling(false);
+				p.resetJumpCounter();
 				p.setJumpSlow(1);
 			} else {
 				this.level.getGravity().appliedOn(p);

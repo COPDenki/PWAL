@@ -11,7 +11,7 @@ import fr.pwal.base.physic.BlockEffect;
 import fr.pwal.base.physic.Gravity;
 import fr.pwal.graphics.base.graphics.window.App_Component;
 
-public class Level implements App_Component {
+public class Level extends App_Component {
 
 	private char[][] blocksIds;
 
@@ -85,8 +85,8 @@ public class Level implements App_Component {
 	}
 
 	public void render(Graphics g, float scale) {
-		this.drawIG(g, scale);
-		this.drawHUD(g);
+		this.render_IG(g, scale);
+		this.render_HUD(g);
 	}
 
 	public void update() {
@@ -162,7 +162,7 @@ public class Level implements App_Component {
 	}
 
 	@Override
-	public void drawIG(Graphics g, float scale) {
+	public void render_IG(Graphics g, float scale) {
 		for (int y = 0; y < blocksIds.length; y++) {
 			for (int x = 0; x < blocksIds[y].length; x++) {
 				g.drawImage(getBlockAt(x, y).getSprite().getTexure(), (int) (x * 16 * scale), (int) (y * 16 * scale), (int) (16 * scale), (int) (16 * scale), null);
@@ -175,7 +175,7 @@ public class Level implements App_Component {
 	}
 
 	@Override
-	public void drawHUD(Graphics g) {
+	public void render_HUD(Graphics g) {
 		for (int i = 0; i < players.length; i++) {
 			Player p = players[i];
 			g.setColor(Color.BLACK);

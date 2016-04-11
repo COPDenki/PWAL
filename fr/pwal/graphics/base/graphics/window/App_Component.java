@@ -2,9 +2,24 @@ package fr.pwal.graphics.base.graphics.window;
 
 import java.awt.Graphics;
 
-public interface App_Component {
+import fr.pwal.graphics.base.graphics.HUD_rendering;
+import fr.pwal.graphics.base.graphics.IG_Rendering;
 
-	public abstract void drawIG(Graphics g, float scale);
+public class App_Component implements IG_Rendering, HUD_rendering{
+	
+	boolean isActive = true;
+	
+	public boolean isActive(){
+		return isActive;
+	}
+	
+	public void setActive(boolean val){
+		this.isActive = val;
+	}
 
-	public abstract void drawHUD(Graphics g);
+	@Override
+	public void render_HUD(Graphics g) {}
+
+	@Override
+	public void render_IG(Graphics g, float scale) {}
 }

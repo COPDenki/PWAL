@@ -2,6 +2,8 @@ package fr.pwal.graphics.base;
 
 import java.awt.Canvas;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -19,7 +21,7 @@ import fr.pwal.level.Level;
 import fr.pwal.level.Player;
 
 @SuppressWarnings("serial")
-public class Application extends Canvas implements Runnable {
+public class Application extends Canvas implements Runnable, MouseListener {
 
 	private String TITLE;
 	private final int WIDTH;
@@ -58,6 +60,7 @@ public class Application extends Canvas implements Runnable {
 		window.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		window.setResizable(false);
 		window.setSize(WIDTH, HEIGHT);
+		this.addMouseListener(this);
 		window.getContentPane().add(this);
 		this.addKeyListener(new Keyboard(this.level.getPlayers()));
 		window.addWindowListener(new WindowAdapter() {
@@ -151,5 +154,26 @@ public class Application extends Canvas implements Runnable {
 
 	public void add(App_Component component) {
 		components.add(component);
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		
 	}
 }

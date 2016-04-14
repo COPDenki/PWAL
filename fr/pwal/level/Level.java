@@ -1,7 +1,7 @@
 package fr.pwal.level;
 
-import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,21 +18,21 @@ public class Level extends App_Component {
 	private int width, height;
 	private int startPosX, startPosY;
 	private int endPosX, endPosY;
-	private Player[] players;
+
+	private LevelChain levelChain;
 
 	private Block[] blocks;
 
 	private Gravity gravity;
 
-	public Level(Gravity gravity, String path, Block[] blocks, Player[] players) {
+	public Level(Gravity gravity, String path, Block[] blocks) {
 		this.gravity = gravity;
 		this.blocks = blocks;
-		this.players = players;
 		try { // On essaie de ...
 			BufferedReader brLvl = new BufferedReader(
-					new InputStreamReader(getClass().getResourceAsStream(path + "/game.pwal")));// ... lire le fichier.
+					new InputStreamReader(getClass().getResourceAsStream(path + ".pwal")));// ... lire le fichier.
 			BufferedReader brProp = new BufferedReader(
-					new InputStreamReader(getClass().getResourceAsStream(path + "/game.p~")));// ... lire le fichier de prop.
+					new InputStreamReader(getClass().getResourceAsStream(path + ".p~")));// ... lire le fichier de prop.
 
 			String line = " "; // Notre ligne actuelle vaut " ".
 
@@ -66,10 +66,6 @@ public class Level extends App_Component {
 			}
 
 			blocksIds = new char[height][width];
-			for (int i = 0; i < players.length; i++) {
-				this.players[i].setPosX(this.startPosX);
-				this.players[i].setPosY(this.startPosY);
-			}
 
 			line = " ";
 
@@ -89,9 +85,9 @@ public class Level extends App_Component {
 		this.render_HUD(g);
 	}
 
-	public void update() {
-		for (int i = 0; i < getPlayers().length; i++) {
-			Player p = getPlayers()[i];
+	public void update(Player[] players) {
+		for (int i = 0; i < players.length; i++) {
+			Player p = players[i];
 			if (p.isJumping()) {
 				p.jump();
 				p.getHitbox()
@@ -109,6 +105,9 @@ public class Level extends App_Component {
 			int y = (int) (p.getPosY());
 			int xW = (int) (p.getPosX() + p.getHitbox().getWidth());
 			int yH = (int) (p.getPosY() + p.getHitbox().getHeight());
+
+			if ((x == getEndPosX() || xW == getEndPosX()) && (y == getEndPosY() || yH == getEndPosY()))
+				levelChain.nextLevel();
 
 			try {
 				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.DOWN,
@@ -168,23 +167,7 @@ public class Level extends App_Component {
 				g.drawImage(getBlockAt(x, y).getSprite().getTexure(), (int) (x * 16 * scale), (int) (y * 16 * scale), (int) (16 * scale), (int) (16 * scale), null);
 			}
 		}
-		for (int i = 0; i < players.length; i++) {
-			Player p = players[i];
-			g.drawImage(p.getSprite(), (int) (p.getPosX() * 16 * scale), (int) (p.getPosY() * 16 * scale), (int) (p.getHitbox().getWidth() * 16 * scale), (int) (p.getHitbox().getHeight() * 16 * scale), null);
-		}
-	}
 
-	@Override
-	public void render_HUD(Graphics g) {
-		for (int i = 0; i < players.length; i++) {
-			Player p = players[i];
-			g.setColor(Color.BLACK);
-			g.fillRect(8, (i + 1) * 20 - 2, 150, 19);
-			g.setColor(p.getColor());
-			g.drawString(p.getName(), 120, (i + 2) * 20 - 8);
-			g.setColor(Color.GREEN);
-			g.fillRect(10, (i + 1) * 20, ((p.getLife()) / p.getMaxLife()) * 100, 15);
-		}
 	}
 
 	public int getStartPosX() {
@@ -203,12 +186,12 @@ public class Level extends App_Component {
 		return this.endPosY;
 	}
 
-	public Player[] getPlayers() {
-		return this.players;
-	}
-
 	public Gravity getGravity() {
 		return this.gravity;
 
+	}
+
+	public void setLevelChain(LevelChain levelChain) {
+		this.levelChain = levelChain;
 	}
 }

@@ -7,18 +7,14 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import fr.pwal.base.physic.AABB;
-import fr.pwal.base.physic.BlockEffect;
 import fr.pwal.graphics.base.control.Keyboard;
 import fr.pwal.graphics.base.graphics.window.App_Component;
-import fr.pwal.level.Level;
-import fr.pwal.level.Player;
+import fr.pwal.level.LevelChain;
 
 @SuppressWarnings("serial")
 public class Application extends Canvas implements Runnable, MouseListener {
@@ -40,14 +36,14 @@ public class Application extends Canvas implements Runnable, MouseListener {
 
 	private boolean isRunning;
 
-	private Level level;
+	private LevelChain levelChain;
 
-	public Application(String title, int width, int height, float scale, Level level) {
+	public Application(String title, int width, int height, float scale, LevelChain levelChain) {
 		this.TITLE = title;
 		this.WIDTH = width;
 		this.HEIGHT = height;
 		this.SCALE = scale;
-		this.level = level;
+		this.levelChain = levelChain;
 		window_Thread = new Thread(this);
 		window_Thread.start();
 	}
@@ -62,7 +58,7 @@ public class Application extends Canvas implements Runnable, MouseListener {
 		window.setSize(WIDTH, HEIGHT);
 		this.addMouseListener(this);
 		window.getContentPane().add(this);
-		this.addKeyListener(new Keyboard(this.level.getPlayers()));
+		this.addKeyListener(new Keyboard(this.levelChain.getPlayers()));
 		window.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -75,7 +71,6 @@ public class Application extends Canvas implements Runnable, MouseListener {
 			}
 		});
 
-		add(level);
 		window.setVisible(true);
 		long timer = System.currentTimeMillis();
 		long start_time_FPS = System.currentTimeMillis();
@@ -109,18 +104,20 @@ public class Application extends Canvas implements Runnable, MouseListener {
 			img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		}
 		Graphics g = img.getGraphics();
-//		for (Iterator<App_Component> iterator = components.iterator(); iterator.hasNext();) {
-//			App_Component app_Component = (App_Component) iterator.next();
-//			app_Component.drawIG(g, SCALE);
-//			app_Component.drawHUD(g);
-//		}
-		this.level.render(g, SCALE);
+		g.clearRect(0, 0, getWidth(), getHeight());
+		//		for (Iterator<App_Component> iterator = components.iterator(); iterator.hasNext();) {
+		//			App_Component app_Component = (App_Component) iterator.next();
+		//			app_Component.drawIG(g, SCALE);
+		//			app_Component.drawHUD(g);
+		//		}
+		this.levelChain.render_IG(g, SCALE);
+		this.levelChain.render_HUD(g);
 		getGraphics().drawImage(img, 0, 0, null);
 
 	}
 
 	public void update() {
-		this.level.update();
+		this.levelChain.update();
 	}
 
 	@Override
@@ -157,23 +154,19 @@ public class Application extends Canvas implements Runnable, MouseListener {
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-	}
+	public void mouseClicked(MouseEvent e) {}
 
 	@Override
-	public void mousePressed(MouseEvent e) {
-	}
+	public void mousePressed(MouseEvent e) {}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {
-	}
+	public void mouseReleased(MouseEvent e) {}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
-	}
+	public void mouseEntered(MouseEvent e) {}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		
+
 	}
 }

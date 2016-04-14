@@ -175,7 +175,7 @@ public class Player implements EventEntity {
 			setJumpSlow(1.2f);
 		}
 
-		if (this.jump_time_counter >= this.jump_time) {
+		if (this.jump_time_counter >= Player.jump_time) {
 			setJumping(false);
 			setJumpingFalling(true);
 		}

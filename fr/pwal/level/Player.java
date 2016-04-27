@@ -26,17 +26,20 @@ public class Player implements EventEntity {
 	private float moveTimer = 0;
 	private float speed = 0.007f;
 	private float slow = 1;
+	private float jumpSlow = 1;
+
 	private static final int jump_time = 3 * 120;
 	private int jump_time_counter;
 	private static final int max_jump = 2;
 	private int jump_counter;
 	private boolean jump_key_reset;
 
+
 	private boolean isJumping;
 
 	private AABB hitbox;
 	private boolean isJumpFalling;
-
+	private int deathTimer, deathCounter;
 	public Player(String name, int maxLife, String spritePath, int[] keysCodes, Color color) {
 		this.name = name;
 		this.life = this.maxLife = maxLife;
@@ -54,28 +57,28 @@ public class Player implements EventEntity {
 	public Image getSprite() {
 		int moveTimer2 = (int) moveTimer;
 		switch (moveDirection) {
-			case 1:
-				if (moveTimer2 == 1)
-					return this.sprite.getSprite(4);
-				else if (moveTimer2 == 3)
-					return this.sprite.getSprite(5);
-				else
-					return this.sprite.getSprite(3);
-			case 3:
-				if (moveTimer2 == 1)
-					return this.sprite.getSprite(10);
-				else if (moveTimer2 == 3)
-					return this.sprite.getSprite(11);
-				else
-					return this.sprite.getSprite(9);
+		case 1:
+			if (moveTimer2 == 1)
+				return this.sprite.getSprite(4);
+			else if (moveTimer2 == 3)
+				return this.sprite.getSprite(5);
+			else
+				return this.sprite.getSprite(3);
+		case 3:
+			if (moveTimer2 == 1)
+				return this.sprite.getSprite(10);
+			else if (moveTimer2 == 3)
+				return this.sprite.getSprite(11);
+			else
+				return this.sprite.getSprite(9);
 
-			default:
-				if (moveTimer2 == 1)
-					return this.sprite.getSprite(0);
-				else if (moveTimer2 == 3)
-					return this.sprite.getSprite(2);
-				else
-					return this.sprite.getSprite(1);
+		default:
+			if (moveTimer2 == 1)
+				return this.sprite.getSprite(0);
+			else if (moveTimer2 == 3)
+				return this.sprite.getSprite(2);
+			else
+				return this.sprite.getSprite(1);
 		}
 	}
 
@@ -109,24 +112,25 @@ public class Player implements EventEntity {
 
 	public void move() {
 		if (this.keyStates[KEY_DOWN] && !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.DOWN]) {
-			moveTimer += 2 * speed * slow;
+			moveTimer += 2 * speed * slow * jumpSlow;
 			moveDirection = 0;
-			this.hitbox.setPosY(this.hitbox.getPosY() + speed * slow);
+			this.hitbox.setPosY(this.hitbox.getPosY() + speed * slow * jumpSlow);
 		}
 		if (this.keyStates[KEY_LEFT] && !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.LEFT]) {
-			moveTimer += 2 * speed * slow;
+			moveTimer += 2 * speed * slow * jumpSlow;
 			moveDirection = 3;
-			this.hitbox.setPosX(this.hitbox.getPosX() - speed * slow);
+			this.hitbox.setPosX(this.hitbox.getPosX() - speed * slow * jumpSlow);
 		}
 		if (this.keyStates[KEY_RIGHT] && !this.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.RIGHT]) {
-			moveTimer += 2 * speed * slow;
+			moveTimer += 2 * speed * slow * jumpSlow;
 			moveDirection = 1;
-			this.hitbox.setPosX(this.hitbox.getPosX() + speed * slow);
+			this.hitbox.setPosX(this.hitbox.getPosX() + speed * slow * jumpSlow);
 		}
 		if (this.keyStates[KEY_JUMP] && ((!(isJumpFalling() || isJumping())) || canMultiJump())) {
 			jump();
 			jump_key_reset = false;
-		} if (!this.keyStates[KEY_JUMP])
+		}
+		if (!this.keyStates[KEY_JUMP])
 			jump_key_reset = true;
 		if (moveTimer > 4)
 			moveTimer = 0;
@@ -137,7 +141,10 @@ public class Player implements EventEntity {
 	}
 
 	public Color getColor() {
-		return this.color;
+		if (getLife() > 0)
+			return this.color;
+		else
+			return Color.RED;
 	}
 
 	public void decreaseLife(int damage) {
@@ -159,10 +166,17 @@ public class Player implements EventEntity {
 
 	public void setLife(int life) {
 		this.life = life;
+		if (life == 0)
+			onDeath();
+
 	}
 
 	@Override
-	public void onDeath() {}
+	public void onDeath() {
+		setPosX(-5);
+		setPosY(-5);
+		deathCounter++;
+	}
 
 	public boolean isJumping() {
 		return isJumping;
@@ -204,7 +218,7 @@ public class Player implements EventEntity {
 	}
 
 	public void setJumpSlow(float slow) {
-		this.slow = slow;
+		this.jumpSlow = slow;
 	}
 
 	private boolean canMultiJump() {
@@ -223,5 +237,33 @@ public class Player implements EventEntity {
 
 	public int getMaxLife() {
 		return this.maxLife;
+	}
+
+	public int getDeathTimer() {
+		return this.deathTimer;
+	}
+
+	public void setDeathTimer(int time) {
+		this.deathTimer = time;
+	}
+
+	public int getDeathCounter() {
+		return deathCounter;
+	}
+
+	public void setDeathCounter(int deathCounter) {
+		this.deathCounter = deathCounter;
+	}
+
+	public void setSlow(float slow) {
+		this.slow = slow;
+	}
+	
+	public float getSlow(){
+		return this.slow;
+	}
+
+	public float getJumpSlow() {
+		return this.jumpSlow;
 	}
 }

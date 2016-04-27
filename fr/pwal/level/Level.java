@@ -99,72 +99,80 @@ public class Level extends App_Component {
 	public void update(Player[] players) {
 		for (int i = 0; i < players.length; i++) {
 			Player p = players[i];
-			if (p.isJumping()) {
-				p.jump();
-				p.getHitbox()
-						.setPosY(p.getHitbox().getPosY() - (getGravity().getIntensity()
-								* ((p.getJumpTime() - p.getJumpTimer()) * (p.getJumpTime() - p.getJumpTimer()))
-								* 0.000023f));
-			} else if (p.isJumpFalling() && p.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.DOWN]) {
-				p.setJumpingFalling(false);
-				p.resetJumpCounter();
-				p.setJumpSlow(1);
-			} else {
-				getGravity().appliedOn(p);
-			}
-			int x = (int) (p.getPosX());
-			int y = (int) (p.getPosY());
-			int xW = (int) (p.getPosX() + p.getHitbox().getWidth());
-			int yH = (int) (p.getPosY() + p.getHitbox().getHeight());
+			if (p.getLife() > 0) {
+				if (p.isJumping()) {
+					p.jump();
+					p.getHitbox()
+							.setPosY(p.getHitbox().getPosY() - (getGravity().getIntensity()
+									* ((p.getJumpTime() - p.getJumpTimer()) * (p.getJumpTime() - p.getJumpTimer()))
+									* 0.000023f
+									* p.getSlow()));
+				} else if (p.isJumpFalling() && p.getHitbox().getSuperCollisionTablOfTheDeadXDPtdr()[AABB.DOWN]) {
+					p.setJumpingFalling(false);
+					p.resetJumpCounter();
+					p.setJumpSlow(1);
+				} else {
+					getGravity().appliedOn(p);
+				}
+				int x = (int) (p.getPosX());
+				int y = (int) (p.getPosY());
+				int xW = (int) (p.getPosX() + p.getHitbox().getWidth());
+				int yH = (int) (p.getPosY() + p.getHitbox().getHeight());
 
-			if ((x == getEndPosX() || xW == getEndPosX()) && (y == getEndPosY() || yH == getEndPosY()))
-				levelChain.nextLevel();
+				if ((x == getEndPosX() || xW == getEndPosX()) && (y == getEndPosY() || yH == getEndPosY()))
+					levelChain.nextLevel();
 
-			try {
-				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.DOWN,
-						(getBlockAt(x, y + 1).getIsHard() || ((p.getPosX() + p.getHitbox().getWidth() - xW) >= 0.01f
-								&& getBlockAt(xW, y + 1).getIsHard())));
-			} catch (ArrayIndexOutOfBoundsException e) {
-			}
+				try {
+					p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.DOWN,
+							(getBlockAt(x, y + 1).getIsHard() || ((p.getPosX() + p.getHitbox().getWidth() - xW) >= 0.01f
+									&& getBlockAt(xW, y + 1).getIsHard())));
+				} catch (ArrayIndexOutOfBoundsException e) {
+				}
 
-			try {
-				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.UP,
-						(getBlockAt(x, y)
-								.getIsHard()
-						|| ((p.getPosX() + p.getHitbox().getWidth() - xW) >= 0.01f && getBlockAt(xW, y).getIsHard())));
-			} catch (ArrayIndexOutOfBoundsException e) {
-			}
+				try {
+					p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.UP,
+							(getBlockAt(x, y).getIsHard() || ((p.getPosX() + p.getHitbox().getWidth() - xW) >= 0.01f
+									&& getBlockAt(xW, y).getIsHard())));
+				} catch (ArrayIndexOutOfBoundsException e) {
+				}
 
-			try {
-				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.LEFT,
-						(p.getPosX() <= 0  || getBlockAt(x, y)
-								.getIsHard()
-						|| ((p.getPosY() + p.getHitbox().getHeight() - yH) >= 0.01f && getBlockAt(x, yH).getIsHard())));
-			} catch (ArrayIndexOutOfBoundsException e) {
-			}
+				try {
+					p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.LEFT,
+							(p.getPosX() <= 0 || getBlockAt(x, y).getIsHard()
+									|| ((p.getPosY() + p.getHitbox().getHeight() - yH) >= 0.01f
+											&& getBlockAt(x, yH).getIsHard())));
+				} catch (ArrayIndexOutOfBoundsException e) {
+				}
 
-			try {
-				p.getHitbox()
-						.setSuperCollisionTablOfTheDeadXDPtdr(AABB.RIGHT,
-								(p.getPosX() + 1 >= width || getBlockAt(x + 1, y).getIsHard()
-										|| ((p.getPosY() + p.getHitbox().getHeight() - yH) >= 0.01f
-												&& getBlockAt(x + 1, yH).getIsHard())));
-			} catch (ArrayIndexOutOfBoundsException e) {
-			}
+				try {
+					p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.RIGHT,
+							(p.getPosX() + 1 >= width || getBlockAt(x + 1, y).getIsHard()
+									|| ((p.getPosY() + p.getHitbox().getHeight() - yH) >= 0.01f
+											&& getBlockAt(x + 1, yH).getIsHard())));
+				} catch (ArrayIndexOutOfBoundsException e) {
+				}
 
-			for (int j = -5; j <= 5; j++) {
-				for (int k = -5; k <= 5; k++) {
-					int x2 = x + k, y2 = y + j;
-					try {
-						if (getBlockAt(x2, y2) instanceof BlockEffect)
-							((BlockEffect) getBlockAt(x2, y2)).doSpecialEffect(p);
-					} catch (Exception e) {
+				for (int j = -5; j <= 5; j++) {
+					for (int k = -5; k <= 5; k++) {
+						int x2 = x + k, y2 = y + j;
+						try {
+							if (getBlockAt(x2, y2) instanceof BlockEffect)
+								((BlockEffect) getBlockAt(x2, y2)).doSpecialEffect(p, x2, y2);
+						} catch (Exception e) {
+						}
 					}
 				}
+				p.move();
+			} else {
+				p.setDeathTimer(p.getDeathTimer()+1);
+				if(p.getDeathTimer() >= 2000) {
+					p.setLife(p.getMaxLife());
+					p.setDeathTimer(0);
+					p.setPosX(getStartPosX());
+					p.setPosY(getStartPosY());
+				}
 			}
-			p.move();
 		}
-
 	}
 
 	public Block getBlockAt(int x, int y) {

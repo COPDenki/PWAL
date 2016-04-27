@@ -48,7 +48,10 @@ public class LevelChain extends App_Component {
 		getLevel(id).render_IG(g, scale);
 		for (int i = 0; i < players.length; i++) {
 			Player p = players[i];
-			g.drawImage(p.getSprite(), (int) (p.getPosX() * 16 * scale), (int) (p.getPosY() * 16 * scale), (int) (p.getHitbox().getWidth() * 16 * scale), (int) (p.getHitbox().getHeight() * 16 * scale), null);
+			if (p.getLife() > 0)
+				g.drawImage(p.getSprite(), (int) (p.getPosX() * 16 * scale), (int) (p.getPosY() * 16 * scale),
+						(int) (p.getHitbox().getWidth() * 16 * scale), (int) (p.getHitbox().getHeight() * 16 * scale),
+						null);
 		}
 	}
 
@@ -59,7 +62,7 @@ public class LevelChain extends App_Component {
 			g.setColor(Color.BLACK);
 			g.fillRect(8, (i + 1) * 20 - 2, 150, 19);
 			g.setColor(p.getColor());
-			g.drawString(p.getName(), 120, (i + 2) * 20 - 8);
+			g.drawString(p.getName() + "(" + p.getDeathCounter() + ")", 120, (i + 2) * 20 - 8);
 			g.setColor(Color.GREEN);
 			g.fillRect(10, (i + 1) * 20, ((p.getLife()) / p.getMaxLife()) * 100, 15);
 		}

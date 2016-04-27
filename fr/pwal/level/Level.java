@@ -1,7 +1,6 @@
 package fr.pwal.level;
 
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,6 +17,7 @@ public class Level extends App_Component {
 	private int width, height;
 	private int startPosX, startPosY;
 	private int endPosX, endPosY;
+	private final int updateRange = 3;
 
 	private LevelChain levelChain;
 
@@ -29,51 +29,37 @@ public class Level extends App_Component {
 		this.gravity = gravity;
 		this.blocks = blocks;
 		try { // On essaie de ...
-			BufferedReader brLvl = new BufferedReader(
-					new InputStreamReader(getClass().getResourceAsStream(path + ".pwal")));// ...
-																							// lire
-																							// le
-																							// fichier.
-			BufferedReader brProp = new BufferedReader(
-					new InputStreamReader(getClass().getResourceAsStream(path + ".p~")));// ...
-																							// lire
-																							// le
-																							// fichier
-																							// de
-																							// prop.
+			BufferedReader brLvl = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(path + ".pwal")));// ... lire le fichier.
+			BufferedReader brProp = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(path + ".p~")));// ... lire le fichier de prop.
 
 			String line = " "; // Notre ligne actuelle vaut " ".
 
-			while ((line = brProp.readLine()) != null) { // Ligne = ligne pas
-															// encore lue. Si
-															// cette ligne n'est
-															// pas vide :
+			while ((line = brProp.readLine()) != null) { // Ligne = ligne pas encore lue. Si cette ligne n'est pas vide :
 				try {
 					String[] infos = line.split("=");
 					switch (infos[0]) {
-					case "width":
-						this.width = Integer.parseInt(infos[1]);
-						break;
-					case "height":
-						this.height = Integer.parseInt(infos[1]);
-						break;
-					case "inX":
-						this.startPosX = Integer.parseInt(infos[1]);
-						break;
-					case "inY":
-						this.startPosY = Integer.parseInt(infos[1]);
-						break;
-					case "outX":
-						this.endPosX = Integer.parseInt(infos[1]);
-						break;
-					case "outY":
-						this.endPosY = Integer.parseInt(infos[1]);
-						break;
+						case "width":
+							this.width = Integer.parseInt(infos[1]);
+							break;
+						case "height":
+							this.height = Integer.parseInt(infos[1]);
+							break;
+						case "inX":
+							this.startPosX = Integer.parseInt(infos[1]);
+							break;
+						case "inY":
+							this.startPosY = Integer.parseInt(infos[1]);
+							break;
+						case "outX":
+							this.endPosX = Integer.parseInt(infos[1]);
+							break;
+						case "outY":
+							this.endPosY = Integer.parseInt(infos[1]);
+							break;
 					}
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
 				}
-
 			}
 
 			blocksIds = new char[height][width];
@@ -126,46 +112,41 @@ public class Level extends App_Component {
 					p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.DOWN,
 							(getBlockAt(x, y + 1).getIsHard() || ((p.getPosX() + p.getHitbox().getWidth() - xW) >= 0.01f
 									&& getBlockAt(xW, y + 1).getIsHard())));
-				} catch (ArrayIndexOutOfBoundsException e) {
-				}
+				} catch (ArrayIndexOutOfBoundsException e) {}
 
 				try {
 					p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.UP,
 							(getBlockAt(x, y).getIsHard() || ((p.getPosX() + p.getHitbox().getWidth() - xW) >= 0.01f
 									&& getBlockAt(xW, y).getIsHard())));
-				} catch (ArrayIndexOutOfBoundsException e) {
-				}
+				} catch (ArrayIndexOutOfBoundsException e) {}
 
 				try {
 					p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.LEFT,
 							(p.getPosX() <= 0 || getBlockAt(x, y).getIsHard()
 									|| ((p.getPosY() + p.getHitbox().getHeight() - yH) >= 0.01f
 											&& getBlockAt(x, yH).getIsHard())));
-				} catch (ArrayIndexOutOfBoundsException e) {
-				}
+				} catch (ArrayIndexOutOfBoundsException e) {}
 
 				try {
 					p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.RIGHT,
 							(p.getPosX() + 1 >= width || getBlockAt(x + 1, y).getIsHard()
 									|| ((p.getPosY() + p.getHitbox().getHeight() - yH) >= 0.01f
 											&& getBlockAt(x + 1, yH).getIsHard())));
-				} catch (ArrayIndexOutOfBoundsException e) {
-				}
+				} catch (ArrayIndexOutOfBoundsException e) {}
 
-				for (int j = -5; j <= 5; j++) {
-					for (int k = -5; k <= 5; k++) {
+				for (int j = -updateRange; j <= updateRange; j++) {
+					for (int k = -updateRange; k <= updateRange; k++) {
 						int x2 = x + k, y2 = y + j;
 						try {
 							if (getBlockAt(x2, y2) instanceof BlockEffect)
 								((BlockEffect) getBlockAt(x2, y2)).doSpecialEffect(p, x2, y2);
-						} catch (Exception e) {
-						}
+						} catch (Exception e) {}
 					}
 				}
 				p.move();
 			} else {
-				p.setDeathTimer(p.getDeathTimer()+1);
-				if(p.getDeathTimer() >= 2000) {
+				p.setDeathTimer(p.getDeathTimer() + 1);
+				if (p.getDeathTimer() >= 2000) {
 					p.setLife(p.getMaxLife());
 					p.setDeathTimer(0);
 					p.setPosX(getStartPosX());

@@ -35,7 +35,7 @@ public class Block {
 
 	public boolean isPlayerInside(Player p, int bpx, int bpy) {
 		float px = p.getPosX(), py = p.getPosY();
-		System.out.println("bpx = " + bpx + " | bpy = " + bpy + " | px = " + px + " | py = " + py);
+//		System.out.println("bpx = " + bpx + " | bpy = " + bpy + " | px = " + px + " | py = " + py);
 		return ((((bpx <= px) && (bpx + 1 >= px)) && ((bpy <= py) && (bpy +1  >= py)))
 				|| (((bpx <= px + 1) && (bpx + 1 >= px + 1)) && ((bpy <= py) && (bpy + 1 >= py)))
 				|| (((bpx <= px) && (bpx + 1 >= px)) && ((bpy <= py + 1) && (bpy + 1 >= py - 1)))

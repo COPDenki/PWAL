@@ -30,34 +30,45 @@ public class Level extends App_Component {
 		this.blocks = blocks;
 		try { // On essaie de ...
 			BufferedReader brLvl = new BufferedReader(
-					new InputStreamReader(getClass().getResourceAsStream(path + ".pwal")));// ... lire le fichier.
+					new InputStreamReader(getClass().getResourceAsStream(path + ".pwal")));// ...
+																							// lire
+																							// le
+																							// fichier.
 			BufferedReader brProp = new BufferedReader(
-					new InputStreamReader(getClass().getResourceAsStream(path + ".p~")));// ... lire le fichier de prop.
+					new InputStreamReader(getClass().getResourceAsStream(path + ".p~")));// ...
+																							// lire
+																							// le
+																							// fichier
+																							// de
+																							// prop.
 
 			String line = " "; // Notre ligne actuelle vaut " ".
 
-			while ((line = brProp.readLine()) != null) { // Ligne = ligne pas encore lue. Si cette ligne n'est pas vide :
+			while ((line = brProp.readLine()) != null) { // Ligne = ligne pas
+															// encore lue. Si
+															// cette ligne n'est
+															// pas vide :
 				try {
 					String[] infos = line.split("=");
 					switch (infos[0]) {
-						case "width":
-							this.width = Integer.parseInt(infos[1]);
-							break;
-						case "height":
-							this.height = Integer.parseInt(infos[1]);
-							break;
-						case "inX":
-							this.startPosX = Integer.parseInt(infos[1]);
-							break;
-						case "inY":
-							this.startPosY = Integer.parseInt(infos[1]);
-							break;
-						case "outX":
-							this.endPosX = Integer.parseInt(infos[1]);
-							break;
-						case "outY":
-							this.endPosY = Integer.parseInt(infos[1]);
-							break;
+					case "width":
+						this.width = Integer.parseInt(infos[1]);
+						break;
+					case "height":
+						this.height = Integer.parseInt(infos[1]);
+						break;
+					case "inX":
+						this.startPosX = Integer.parseInt(infos[1]);
+						break;
+					case "inY":
+						this.startPosY = Integer.parseInt(infos[1]);
+						break;
+					case "outX":
+						this.endPosX = Integer.parseInt(infos[1]);
+						break;
+					case "outY":
+						this.endPosY = Integer.parseInt(infos[1]);
+						break;
 					}
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
@@ -111,31 +122,35 @@ public class Level extends App_Component {
 
 			try {
 				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.DOWN,
-						(getBlockAt(x, y + 1).getIsHard()
-								|| ((p.getPosX() + p.getHitbox().getWidth() - xW) >= 0.01f
-										&& getBlockAt(xW, y + 1).getIsHard())));
-			} catch (ArrayIndexOutOfBoundsException e) {}
+						(getBlockAt(x, y + 1).getIsHard() || ((p.getPosX() + p.getHitbox().getWidth() - xW) >= 0.01f
+								&& getBlockAt(xW, y + 1).getIsHard())));
+			} catch (ArrayIndexOutOfBoundsException e) {
+			}
 
 			try {
 				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.UP,
-						(getBlockAt(x, y).getIsHard()
-								|| ((p.getPosX() + p.getHitbox().getWidth() - xW) >= 0.01f
-										&& getBlockAt(xW, y).getIsHard())));
-			} catch (ArrayIndexOutOfBoundsException e) {}
+						(getBlockAt(x, y)
+								.getIsHard()
+						|| ((p.getPosX() + p.getHitbox().getWidth() - xW) >= 0.01f && getBlockAt(xW, y).getIsHard())));
+			} catch (ArrayIndexOutOfBoundsException e) {
+			}
 
 			try {
 				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.LEFT,
-						(getBlockAt(x, y).getIsHard()
-								|| ((p.getPosY() + p.getHitbox().getHeight() - yH) >= 0.01f
-										&& getBlockAt(x, yH).getIsHard())));
-			} catch (ArrayIndexOutOfBoundsException e) {}
+						(p.getPosX() <= 0  || getBlockAt(x, y)
+								.getIsHard()
+						|| ((p.getPosY() + p.getHitbox().getHeight() - yH) >= 0.01f && getBlockAt(x, yH).getIsHard())));
+			} catch (ArrayIndexOutOfBoundsException e) {
+			}
 
 			try {
-				p.getHitbox().setSuperCollisionTablOfTheDeadXDPtdr(AABB.RIGHT,
-						(getBlockAt(x + 1, y).getIsHard()
-								|| ((p.getPosY() + p.getHitbox().getHeight() - yH) >= 0.01f
-										&& getBlockAt(x + 1, yH).getIsHard())));
-			} catch (ArrayIndexOutOfBoundsException e) {}
+				p.getHitbox()
+						.setSuperCollisionTablOfTheDeadXDPtdr(AABB.RIGHT,
+								(p.getPosX() + 1 >= width || getBlockAt(x + 1, y).getIsHard()
+										|| ((p.getPosY() + p.getHitbox().getHeight() - yH) >= 0.01f
+												&& getBlockAt(x + 1, yH).getIsHard())));
+			} catch (ArrayIndexOutOfBoundsException e) {
+			}
 
 			for (int j = -5; j <= 5; j++) {
 				for (int k = -5; k <= 5; k++) {
@@ -143,7 +158,8 @@ public class Level extends App_Component {
 					try {
 						if (getBlockAt(x2, y2) instanceof BlockEffect)
 							((BlockEffect) getBlockAt(x2, y2)).doSpecialEffect(p);
-					} catch (Exception e) {}
+					} catch (Exception e) {
+					}
 				}
 			}
 			p.move();
@@ -164,7 +180,8 @@ public class Level extends App_Component {
 	public void render_IG(Graphics g, float scale) {
 		for (int y = 0; y < blocksIds.length; y++) {
 			for (int x = 0; x < blocksIds[y].length; x++) {
-				g.drawImage(getBlockAt(x, y).getSprite().getTexure(), (int) (x * 16 * scale), (int) (y * 16 * scale), (int) (16 * scale), (int) (16 * scale), null);
+				g.drawImage(getBlockAt(x, y).getSprite().getTexure(), (int) (x * 16 * scale), (int) (y * 16 * scale),
+						(int) (16 * scale), (int) (16 * scale), null);
 			}
 		}
 

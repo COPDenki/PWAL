@@ -7,6 +7,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.JFrame;
@@ -33,6 +34,8 @@ public class Application extends Canvas implements Runnable, MouseListener {
 	private BufferedImage img;
 
 	private Vector<App_Component> components;
+	
+	private Vector<AppEventListener> events;
 
 	private boolean isRunning;
 
@@ -52,6 +55,7 @@ public class Application extends Canvas implements Runnable, MouseListener {
 	public void run() {
 		isRunning = true;
 		components = new Vector<>();
+		events = new Vector<>();
 		window = new JFrame(TITLE);
 		window.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		window.setResizable(false);
@@ -118,6 +122,10 @@ public class Application extends Canvas implements Runnable, MouseListener {
 
 	public void update() {
 		this.levelChain.update();
+		for (Iterator iterator = events.iterator(); iterator.hasNext();) {
+			AppEventListener event = (AppEventListener) iterator.next();
+			event.update();
+		}
 	}
 
 	@Override
@@ -151,6 +159,10 @@ public class Application extends Canvas implements Runnable, MouseListener {
 
 	public void add(App_Component component) {
 		components.add(component);
+	}
+	
+	public void addEvent(AppEventListener event){
+		events.addElement(event);
 	}
 
 	@Override

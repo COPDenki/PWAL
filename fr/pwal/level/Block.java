@@ -1,5 +1,6 @@
 package fr.pwal.level;
 
+import fr.pwal.graphics.base.graphics.level.AnimatedSprite;
 import fr.pwal.graphics.base.graphics.level.Sprite;
 
 public class Block {
@@ -21,6 +22,12 @@ public class Block {
 		this.id = id;
 	}
 
+	public Block(char id, String spritePath, boolean isHard, boolean isAnimated) {
+		this.sprite = new AnimatedSprite(SIZE, spritePath);
+		this.isHard = isHard;
+		this.id = id;
+	}
+	
 	public boolean getIsHard() {
 		return this.isHard;
 	}

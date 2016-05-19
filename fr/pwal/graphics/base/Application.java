@@ -26,6 +26,7 @@ public class Application extends Canvas implements Runnable, MouseListener {
 	private final float SCALE;
 	private final static int FPS = 1_000 / 60;
 	private final static int UPS = 1_000 / 120;
+	public static int timer = 0;
 
 	private int current_fps, current_ups;
 
@@ -34,7 +35,7 @@ public class Application extends Canvas implements Runnable, MouseListener {
 	private BufferedImage img;
 
 	private Vector<App_Component> components;
-	
+
 	private Vector<AppEventListener> events;
 
 	private boolean isRunning;
@@ -80,11 +81,18 @@ public class Application extends Canvas implements Runnable, MouseListener {
 		long start_time_FPS = System.currentTimeMillis();
 		long start_time_UPS = System.currentTimeMillis();
 		int tempFPS = 0, tempUPS = 0;
+		int timerRate = 0;
 		while (isRunning) {
 			long current_time = System.currentTimeMillis();
 
 			if (current_time >= start_time_UPS + UPS) {
 				update();
+				timerRate ++;
+				if (timerRate == 30) {
+					Application.timer++;
+					if (Application.timer >= Integer.MAX_VALUE - 10) Application.timer = 0;
+					timerRate = 0;
+				}
 				tempUPS++;
 			}
 
@@ -92,14 +100,13 @@ public class Application extends Canvas implements Runnable, MouseListener {
 				render();
 				tempFPS++;
 			}
-			if (System.currentTimeMillis() > timer + 1000) {
+			if (System.currentTimeMillis() >= timer + 1000) {
 				timer += 1000;
 				current_fps = tempFPS;
 				current_ups = tempUPS;
 				tempUPS = 0;
 				tempFPS = 0;
 			}
-
 		}
 	}
 
@@ -122,8 +129,8 @@ public class Application extends Canvas implements Runnable, MouseListener {
 
 	public void update() {
 		this.levelChain.update();
-		for (Iterator iterator = events.iterator(); iterator.hasNext();) {
-			AppEventListener event = (AppEventListener) iterator.next();
+		for (Iterator<AppEventListener> iterator = events.iterator(); iterator.hasNext();) {
+			AppEventListener event = iterator.next();
 			event.update();
 		}
 	}
@@ -160,8 +167,8 @@ public class Application extends Canvas implements Runnable, MouseListener {
 	public void add(App_Component component) {
 		components.add(component);
 	}
-	
-	public void addEvent(AppEventListener event){
+
+	public void addEvent(AppEventListener event) {
 		events.addElement(event);
 	}
 

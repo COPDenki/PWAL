@@ -2,7 +2,6 @@ package fr.pwal.level;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 
 import javax.swing.JOptionPane;
 
@@ -54,17 +53,18 @@ public class LevelChain extends App_Component {
 						null);
 		}
 	}
-
 	@Override
 	public void render_HUD(Graphics g) {
 		for (int i = 0; i < players.length; i++) {
 			Player p = players[i];
 			g.setColor(Color.BLACK);
-			g.fillRect(8, (i + 1) * 20 - 2, 150, 19);
+			g.fillRect(8, (i + 1) * 20 - 2, 190, 19);
 			g.setColor(p.getColor());
 			g.drawString(p.getName() + "(" + p.getDeathCounter() + ")", 120, (i + 2) * 20 - 8);
+			g.setColor(Color.RED);
+			g.fillRect(10, (i + 1) * 20, 100, 15);
 			g.setColor(Color.GREEN);
-			g.fillRect(10, (i + 1) * 20, ((p.getLife()) / p.getMaxLife()) * 100, 15);
+			g.fillRect(10, (i + 1) * 20,(int) ((((float)p.getLife()) / (float)p.getMaxLife()) * 100), 15);
 		}
 	}
 

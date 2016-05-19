@@ -174,7 +174,7 @@ public class Player implements EventEntity {
 	@Override
 	public void onDeath() {
 		setPosX(-5);
-		setPosY(-5);
+		setPosY(50);
 		deathCounter++;
 	}
 

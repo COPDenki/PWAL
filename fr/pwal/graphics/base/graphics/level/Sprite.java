@@ -10,7 +10,7 @@ import fr.pwal.graphics.base.graphics.window.BlockOverlay;
 
 public class Sprite {
 
-	private final int SIZE;
+	protected final int SIZE;
 	private Image texture;
 	
 	public Sprite(int size, String path) {
@@ -22,6 +22,12 @@ public class Sprite {
 			this.texture = new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB);
 		}
 	}
+	
+	public Sprite(int size){
+		this.SIZE = size;
+	}
+	
+	
 	public Image getTexure(){
 		return texture;
 	}

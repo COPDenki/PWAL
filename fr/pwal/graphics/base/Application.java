@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.util.Iterator;
 import java.util.Vector;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -27,6 +28,7 @@ public class Application extends Canvas implements Runnable, MouseListener {
 	private final static int FPS = 1_000 / 60;
 	private final static int UPS = 1_000 / 120;
 	public static int timer = 0;
+	public ImageIcon ico;
 
 	private int current_fps, current_ups;
 
@@ -42,11 +44,12 @@ public class Application extends Canvas implements Runnable, MouseListener {
 
 	private LevelChain levelChain;
 
-	public Application(String title, int width, int height, float scale, LevelChain levelChain) {
+	public Application(String title, ImageIcon ico, int width, int height, float scale, LevelChain levelChain) {
 		this.TITLE = title;
 		this.WIDTH = width;
 		this.HEIGHT = height;
 		this.SCALE = scale;
+		this.ico = ico;
 		this.levelChain = levelChain;
 		window_Thread = new Thread(this);
 		window_Thread.start();
@@ -60,6 +63,7 @@ public class Application extends Canvas implements Runnable, MouseListener {
 		window = new JFrame(TITLE);
 		window.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		window.setResizable(false);
+		window.setIconImage(ico.getImage());
 		window.setSize(WIDTH, HEIGHT);
 		this.addMouseListener(this);
 		window.getContentPane().add(this);
